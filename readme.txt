@@ -61,6 +61,13 @@ the pngslim package with 'pngout.exe' without prior arrangement.
 
 v1.1 2020
 - Fixed up typos and small details in Readme.
+- Bundled programs will no longer be UPX compressed. The space saving is unnecessary 
+and will provide a minor speed up. Programs' license information added.
+- Updated 'pngrewrite.exe' to version 1.4.0 (was 1.3.0). Maintenance release.
+- Updated 'pngout.exe' to 13-Feb-2015 release (was 22-Sep-2009). This gives 
+better randomness when the -r switch is used; Fixes -f5 to generate block 
+boundaries in a consistent and correct manner; Adds -f6 option to reuse filters 
+line-by-line from a source PNG file.
 
 v1.0 25-Sep-2009
 - Release of version 1.0, with smarter, more efficient processing!
@@ -74,16 +81,6 @@ removed. The script requires less tweaking now and should work great for you
 out of the box.
 - Checked UPX compression of apps (v3.03W -ultra-brute -compress-icons=3).
 Compressed 'pngoptimizercl' and 'pngrewrite'.
-
-TODO
-- Gather feedback and further testing to improve 'smartness' and compression.
-- If image contains no Alpha, avoid RGBA and G+A color types.
-- Remove 'Pngrewrite' to evaluate impact on compression. AFAIK all features are
-now replicated in the other software used.
-- Finish re-writing script to make more readable and informative.
-- Developing a PNG Test Corpus- to validate compression and speed improvements.
-- Switch console text color to indicate end condition error, etc.
-
 
 v1.0beta3 23-Sep-2009
 - Update introduces first step in making the script a bit smarter and efficient.
@@ -194,8 +191,8 @@ Please read the comments under the 'Legal' section of this readme!
 - advdef.exe v1.15 (31-Oct-2005) 
    http://advancemame.sourceforge.net/comp-readme.html
 
-- DeflOpt.exe v2.07 (05-Sep-2007) by B.J.Walbeehm 
-   http://www.walbeehm.com/download/
+- DeflOpt.exe v2.07 (05-Sep-2007) by Ben Jos Walbeehm.
+   http://web.archive.org/web/20131208161446/http://www.walbeehm.com/download/index.html
 
 - OptiPNG.exe v0.6.3 (18-May-2009) by C.Truta
    http://optipng.sourceforge.net/
@@ -203,10 +200,10 @@ Please read the comments under the 'Legal' section of this readme!
 - PngOptimizerCL.exe v1.8 (6-Nov-2008) by H.Nilsson
    http://psydk.org/PngOptimizer.php
 
-- pngout.exe (22-Sep-2009) by K.Silverman
+- pngout.exe (13-Feb-2015) by Ken Silverman
    http://advsys.net/ken/utils.htm
 
-- pngrewrite.exe v1.3.0 (7-Dec-2008) by J.Summer
+- pngrewrite.exe v1.4.0 (8-Jun-2010) by Jason Summer
    http://entropymine.com/jason/pngrewrite/
 
 - zlib.dll v1.2.3 (18-Jul-2005) by Jean-loup Gailly and Mark Adler
