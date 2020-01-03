@@ -4,48 +4,51 @@
 :: v1.1 (01-Jan-2020)
 :: By Andrew C.E. Dent, dedicated to the Public Domain.
 
-set Huff_Trials=15
-set Rand_Trials=100
+set HuffmanTrials=15
+set RandomTableTrials=100
 set LargeFileSize=66400
 
-set VersionText=(v1.1)
+set Version=(v1.1)
 
-echo Started batch %date% %time% - pngslim %VersionText%.
+echo Started batch %date% %time% - pngslim %Version%.
 echo.
 
 :: Check programs are available for the script
 set PngDir="%~dp0apps\"
 PATH %PngDir%;%PATH% >nul
-if not exist %PngDir%advdef.exe echo File 1 missing! & goto theend
-if not exist %PngDir%deflopt.exe echo File 2 missing! & goto theend
-if not exist %PngDir%optipng.exe echo File 3 missing! & goto theend
-if not exist %PngDir%pngoptimizercl.exe echo File 4 missing! & goto theend
-if not exist %PngDir%pngout.exe echo File 5 missing! & goto theend
-if not exist %PngDir%pngrewrite.exe echo File 6 missing! & goto theend
-if not exist %PngDir%zlib.dll echo File 7 missing! & goto theend
+if not exist %PngDir%advdef.exe echo File missing. & goto TheEnd
+if not exist %PngDir%deflopt.exe echo File missing. & goto TheEnd
+if not exist %PngDir%optipng.exe echo File missing. & goto TheEnd
+if not exist %PngDir%pngoptimizercl.exe echo File missing. & goto TheEnd
+if not exist %PngDir%pngout.exe echo File missing. & goto TheEnd
+if not exist %PngDir%pngrewrite.exe echo File missing. & goto TheEnd
+if not exist %PngDir%zlib.dll echo File missing. & goto TheEnd
 :: Check some png files have been provided
 if .%1==. (
 	echo Drag-and-drop a selection of PNG files to optimize them.
-	goto theend
+	goto TheEnd
 )
-set v=0
-set zs=0
-set zx=0
-set TotalBytes=0
+set v=0 & :: - Verbose mode switch
+set FileSize=0
+set FileSizeReduction=0
+set TotalBytesSaved=0
 for %%i in (%*) do set /a TotalFiles+=1
 
 
-:start
-	set /a PngNum+=1
-	if /I %~x1 NEQ .png goto nextfile
-	title [%PngNum%/%TotalFiles%] pngslim %VersionText%
+:SelectFile
+	set /a CurrentFile+=1
+	if /I %~x1 NEQ .png goto NextFile
+	title [%CurrentFile%/%TotalFiles%] pngslim %Version%
 	echo %~z1b - Optimizing: %1
-	set z0=%~z1
+	set OriginalFileSize=%~z1
 	copy %1 %1.backup >nul
 
-:stage10
+:Stage10
 	pngout -q -s4 -f0 -c6 -k0 -force %1
-	if errorlevel 1 echo Cannot compress: Unsupported PNG format. & goto stage99
+	if errorlevel 1 (
+		echo Cannot compress: Unsupported PNG format.
+		goto Stage99
+	)
 
 	if %v%==1 echo %~z1b - T0S1: Written uncompressed file with stripped metadata.
 	set LargeFile=0
@@ -66,12 +69,12 @@ for %%i in (%*) do set /a TotalFiles+=1
 ::
 
 echo %~z1b - Compression trial 1 running (Color and filter settings)...
-set ImgColr="Unknown"
+set ImageColorMode="Undetermined"
 
 :T1_Step1_Gray
 	pngout -q -s4 -c0 -d8 %1
 	if ERRORLEVEL 3 goto T1_Step1_GrayA
-	set ImgColr="Gray"
+	set ImageColorMode="Gray"
 	if %LargeFile%==0 (
 		for %%i in (1,2) do for /L %%j in (0,1,5) do pngout -q -k1 -s0 -n%%i -f%%j -c0 -d1 %1
 		for %%i in (1,2) do for /L %%j in (0,1,5) do pngout -q -k1 -s0 -n%%i -f%%j -c0 -d2 %1
@@ -90,7 +93,7 @@ set ImgColr="Unknown"
 :T1_Step1_GrayA
 	pngout -q -s4 -c4 %1
 	if ERRORLEVEL 3 goto T1_Step1_Pal
-	set ImgColr="Gray"
+	set ImageColorMode="Gray"
 	if %LargeFile%==0 for %%i in (1,2) do for /L %%j in (0,1,5) do pngout -q -k1 -s0 -n%%i -f%%j -c4 %1
 	if %LargeFile%==1 for %%i in (0,256) do for %%j in (0,5) do pngout -q -k1 -s1 -b%%i -f%%j -c4 %1
 	if %v%==1 echo %~z1b - T1S1: Tested color setting -c4 (Gray+Alpha).
@@ -115,7 +118,7 @@ set ImgColr="Unknown"
 
 
 :T1_Step1_RGB
-	if %ImgColr%=="Gray" goto T1_Step2
+	if %ImageColorMode%=="Gray" goto T1_Step2
 	pngout -q -s4 -c2 %1
 	if ERRORLEVEL 3 goto T1_Step1_RGBA
 	if %LargeFile%==0 for %%i in (1,2) do for /L %%j in (0,1,5) do pngout -q -k1 -s0 -n%%i -f%%j -c2 %1
@@ -172,7 +175,7 @@ if %v%==1 echo %~z1b - T2S1: Seeking optimum number of Huffman blocks...
 	)
 	if %v%==1 echo %~z1b - T2S1: Best %Huff_Base%b with %Huff_Best% blocks. Tested %Huff_Blocks%, Count %Huff_Count%.
 	if %Huff_Blocks% GEQ %Huff_MaxBlocks% goto T2_Step2
-	if %Huff_Count% GEQ %Huff_Trials% goto T2_Step2
+	if %Huff_Count% GEQ %HuffmanTrials% goto T2_Step2
 	goto T2_Step1_Loop
 
 :T2_Step2
@@ -202,10 +205,10 @@ if %v%==1 echo %~z1b - T2S1: Seeking optimum number of Huffman blocks...
 ::
 
 :T3_Step1_Loop
-	set zs=%~z1
-	echo %~z1b - Compression trial 3 running (%Rand_Trials%x random Huffman tables)...
-	for /L %%i in (1,1,%Rand_Trials%) do start /belownormal /b /wait pngout -q -k1 -ks -s0 -r %1
-	if %~z1 LSS %zs% goto T3_Step1_Loop
+	set FileSize=%~z1
+	echo %~z1b - Compression trial 3 running (%RandomTableTrials%x random Huffman tables)...
+	for /L %%i in (1,1,%RandomTableTrials%) do start /belownormal /b /wait pngout -q -k1 -ks -s0 -r %1
+	if %~z1 LSS %FileSize% goto T3_Step1_Loop
 	echo %~z1b - Compression trial 3 complete (Randomized Huffman tables).
 
 ::
@@ -218,34 +221,34 @@ deflopt -s -k %1 >nul
 echo %~z1b - Final compression sweep finished.
 
 
-:stage99
-	:: if %~z1 GTR %z0% copy %1 %1._fail >nul
-	if %~z1 GEQ %z0% (
+:Stage99
+	:: if %~z1 GTR %OriginalFileSize% copy %1 %1._fail >nul
+	if %~z1 GEQ %OriginalFileSize% (
 		del %1
 		rename "%~1.backup" "%~nx1"
 		echo Original file restored; could not compress further.
 	)
-	set /a zs=%z0%-%~z1
-	set /a zx=(%zs%*100)/%z0%
-	set /a TotalBytes+=%zs%
-	if %~z1 LSS %z0% (
+	set /a FileSize=%OriginalFileSize%-%~z1
+	set /a FileSizeReduction=(%FileSize%*100)/%OriginalFileSize%
+	set /a TotalBytesSaved+=%FileSize%
+	if %~z1 LSS %OriginalFileSize% (
 		del %1.backup
-		echo Optimized: "%~n1". Slimmed %zx%%%, %zs% bytes.
+		echo Optimized: "%~n1". Slimmed %FileSizeReduction%%%, %FileSize% bytes.
 	)
 
-:nextfile
+:NextFile
 	echo.
 	shift
-	if .%1==. goto close
-	goto start
+	if .%1==. goto Close
+	goto SelectFile
 
-:close
+:Close
 	title Optimization complete.
 	echo.
-	echo Finished %date% %time% - pngslim %VersionText%.
-	echo Processed %TotalFiles% files. Slimmed %TotalBytes% bytes.
+	echo Finished %date% %time% - pngslim %Version%.
+	echo Processed %TotalFiles% files. Slimmed %TotalBytesSaved% bytes.
 
-:theend
+:TheEnd
 	endlocal
 	pause
 	title %ComSpec%

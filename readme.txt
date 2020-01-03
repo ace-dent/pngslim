@@ -20,12 +20,12 @@ which may cause problems displaying these optimized images.
 3. Have fun slimming away those surplus bytes! :-)
 
 For advanced users please tweak the script to your needs.
-- Huff_Trials: When adjusting the number of Huffman blocks, the number of
+- HuffmanTrials: When adjusting the number of Huffman blocks, the number of
  consecutive failed attempts to reduce file size, before quitting the trial.
  From testing 15 (default) works great, with higher numbers giving little
  benefit. For faster processing reduce to 2.
-- Rand_Trials : Number of tests (default 100), with randomized Huffman tables.
- To squeeze out an extra few bytes set to 1000. For fast processing set to 1.
+- RandomTableTrials : Number of trials with randomized Huffman tables (default 
+100). To squeeze out a few extra bytes set to 500. For fast processing set to 1.
 - LargeFileSize : The uncompressed file size in bytes that determines a small/
  large image and adjusts processing effort accordingly. The default 66400 bytes
  corresponds to an image larger than 128 x 128 pixels. 
@@ -60,6 +60,8 @@ the pngslim package with 'pngout.exe' without prior arrangement.
 # History
 
 v1.1 2020
+- Improved script readability: Indentation; More consistent label and variable
+naming
 - Fixed up typos and small details in Readme.
 - Bundled programs will no longer be UPX compressed. The space saving is unnecessary 
 and will provide a minor speed up. Programs' license information added.
