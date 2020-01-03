@@ -29,6 +29,9 @@ For advanced users please tweak the script to your needs.
 - LargeFileSize : The uncompressed file size in bytes that determines a small/
  large image and adjusts processing effort accordingly. The default 66400 bytes
  corresponds to an image larger than 128 x 128 pixels. 
+- ForceRGBA : (0/1) will first rewrite the image as RGBA and then only optimize 
+ in that color mode, or restore the original if not compressed. This limits the 
+ possible compression methods, so is not recommended (default ForceRGBA=0).
 
 * Note: Due to limitations of MS Windows, the maximum number of files that you
 can drag & drop depends on the total text length of the image file paths+names.
@@ -60,11 +63,13 @@ the pngslim package with 'pngout.exe' without prior arrangement.
 # History
 
 v1.1 2020
+- Added ForceRGBA option. Certain applications require .png files to be in the 
+RGB+Alpha color mode, at the cost of compression. Default is off.
 - Improved script readability: Indentation; More consistent label and variable
 naming
 - Fixed up typos and small details in Readme.
-- Bundled programs will no longer be UPX compressed. The space saving is unnecessary 
-and will provide a minor speed up. Programs' license information added.
+- Bundled programs will no longer be UPX compressed. The space saving is not 
+necessary and provides a minor speed up. Programs' license information added.
 - Updated 'pngrewrite.exe' to version 1.4.0 (was 1.3.0). Maintenance release.
 - Updated 'pngout.exe' to 13-Feb-2015 release (was 22-Sep-2009). This gives 
 better randomness when the -r switch is used; Fixes -f5 to generate block 
@@ -223,4 +228,3 @@ depends, and those pioneers developing and optimizing the png standard.
 
 
 https://github.com/ace-dent/pngslim/releases
-012345678-1-2345678-2-2345678-3-2345678-4-2345678-5-2345678-6-2345678-7-2345678-8

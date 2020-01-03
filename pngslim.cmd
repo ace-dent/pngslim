@@ -7,6 +7,7 @@
 set HuffmanTrials=15
 set RandomTableTrials=100
 set LargeFileSize=66400
+set ForceRGBA=0
 
 set Version=(v1.1)
 
@@ -52,12 +53,20 @@ for %%i in (%*) do set /a TotalFiles+=1
 	)
 
 	if %v%==1 echo %~z1b - T0S1: Written uncompressed file with stripped metadata.
+	set ImageColorMode="Undetermined"
 	set LargeFile=0
 	if %~z1 GTR %LargeFileSize% set LargeFile=1
 	set /a Huff_MaxBlocks=%~z1/256
 	if %Huff_MaxBlocks% GTR 512 set Huff_MaxBlocks=512
 	if %v%==1 echo %~z1b - T0S2: File metrics: Max Huff blocks %Huff_MaxBlocks%, Large file: %LargeFile%.
 
+	:: Skip steps that modify color depth for Forced RGBA images
+	if %ForceRGBA%==1 (
+		echo %~z1b - Lossy stage complete ^(Saved RGBA image, stripped metadata^).
+		echo %~z1b - Compression trial 1 running ^(RGBA Color and filter settings^)...
+		goto T1_Step1_RGBA
+	)
+	
 	pngoptimizercl -file:%1 >nul
 	pngrewrite %1 %1
 	start /belownormal /b /wait pngout.exe -q -k1 -ks -s1 %1
@@ -70,7 +79,6 @@ for %%i in (%*) do set /a TotalFiles+=1
 ::
 
 echo %~z1b - Compression trial 1 running (Color and filter settings)...
-set ImageColorMode="Undetermined"
 
 :T1_Step1_Gray
 	pngout -q -s4 -c0 -d8 %1
@@ -138,14 +146,14 @@ set ImageColorMode="Undetermined"
 	if %LargeFile%==0 (
 		for %%i in (0,3) do for /L %%j in (0,1,5) do pngout -q -k1 -ks -s%%i -b256 -f%%j %1
 		optipng -q -nb -nc -zc1-9 -zm8-9 -zs0-3 -f0-5 %1
-		optipng -q -zc1-9 -zm8-9 -zs0-3 -f0-5 %1
+		if %ForceRGBA% NEQ 1 optipng -q -zc1-9 -zm8-9 -zs0-3 -f0-5 %1
 	)
 	if %LargeFile%==1 (
 		for %%i in (0,256) do for /L %%j in (1,1,4) do pngout -q -k1 -ks -s1 -b%%i -f%%j %1
 		for %%i in (128) do for /L %%j in (0,1,5) do pngout -q -k1 -ks -s1 -b%%i -f%%j %1
 		start /belownormal /b /wait pngout -q -k1 -ks -s0 -n1 %1
 		optipng -q -nb -nc -zc9 -zm8 -zs0-3 -f0-5 %1
-		optipng -q -zc9 -zm8 -zs0-3 -f0-5 %1
+		if %ForceRGBA% NEQ 1 optipng -q -zc9 -zm8 -zs0-3 -f0-5 %1
 	)
 
 :T1_End
