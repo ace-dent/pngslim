@@ -14,20 +14,21 @@ echo Started batch %date% %time% - pngslim %Version%.
 echo.
 
 :: Check programs are available for the script
-set PngDir="%~dp0apps\"
-PATH %PngDir%;%PATH% >nul
-if not exist %PngDir%advdef.exe echo File missing. & goto TheEnd
-if not exist %PngDir%deflopt.exe echo File missing. & goto TheEnd
-if not exist %PngDir%optipng.exe echo File missing. & goto TheEnd
-if not exist %PngDir%pngoptimizercl.exe echo File missing. & goto TheEnd
-if not exist %PngDir%pngout.exe echo File missing. & goto TheEnd
-if not exist %PngDir%pngrewrite.exe echo File missing. & goto TheEnd
-if not exist %PngDir%zlib.dll echo File missing. & goto TheEnd
+pushd "%~dp0apps\" || echo Directory missing. && goto TheEnd
+if not exist advdef.exe echo File missing. & goto TheEnd
+if not exist deflopt.exe echo File missing. & goto TheEnd
+if not exist optipng.exe echo File missing. & goto TheEnd
+if not exist pngoptimizercl.exe echo File missing. & goto TheEnd
+if not exist pngout.exe echo File missing. & goto TheEnd
+if not exist pngrewrite.exe echo File missing. & goto TheEnd
+if not exist zlib.dll echo File missing. & goto TheEnd
+
 :: Check some png files have been provided
 if .%1==. (
 	echo Drag-and-drop a selection of PNG files to optimize them.
 	goto TheEnd
 )
+
 set v=0 & :: - Verbose mode switch
 set FileSize=0
 set FileSizeReduction=0
@@ -249,6 +250,7 @@ echo %~z1b - Final compression sweep finished.
 	echo Processed %TotalFiles% files. Slimmed %TotalBytesSaved% bytes.
 
 :TheEnd
+	popd
 	endlocal
 	pause
 	title %ComSpec%
