@@ -22,7 +22,6 @@ if not exist optipng.exe echo File missing. & goto TheEnd
 if not exist pngoptimizercl.exe echo File missing. & goto TheEnd
 if not exist pngout.exe echo File missing. & goto TheEnd
 if not exist pngrewrite.exe echo File missing. & goto TheEnd
-if not exist zlib.dll echo File missing. & goto TheEnd
 
 :: Check some png files have been provided
 if .%1==. (

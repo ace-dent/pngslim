@@ -75,6 +75,7 @@ necessary and provides a minor speed up. Programs' license information added.
 better randomness when the -r switch is used; Fixes -f5 to generate block 
 boundaries in a consistent and correct manner; Adds -f6 option to reuse filters 
 line-by-line from a source PNG file.
+- Removed zlib.dll (was v1.2.3, 18-Jul-2005). Not required.
 
 v1.0 25-Sep-2009
 - Release of version 1.0, with smarter, more efficient processing!
@@ -213,8 +214,6 @@ Please read the comments under the 'Legal' section of this readme!
 - pngrewrite.exe v1.4.0 (8-Jun-2010) by Jason Summer
    http://entropymine.com/jason/pngrewrite/
 
-- zlib.dll v1.2.3 (18-Jul-2005) by Jean-loup Gailly and Mark Adler
-   http://www.zlib.net/
 
 
 # Thanks!
