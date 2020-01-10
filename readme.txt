@@ -63,10 +63,11 @@ the pngslim package with 'pngout.exe' without prior arrangement.
 # History
 
 v1.1 2020
-- Added ForceRGBA option. Certain applications require .png files to be in the 
+- Added ForceRGBA option. Certain applications require PNG files to be in the 
 RGB+Alpha color mode, at the cost of compression. Default is off.
-- Improved script readability: Indentation; More consistent label and variable
-naming
+- Improved script readability: Indented with tabs; More consistent label and 
+variable naming; Expanded FOR loops over multiple lines; Avoid long lines 
+(<80chrs)
 - Fixed up typos and small details in Readme.
 - Bundled programs will no longer be UPX compressed. The space saving is not 
 necessary and provides a minor speed up. Programs' license information added.
@@ -75,7 +76,7 @@ necessary and provides a minor speed up. Programs' license information added.
 better randomness when the -r switch is used; Fixes -f5 to generate block 
 boundaries in a consistent and correct manner; Adds -f6 option to reuse filters 
 line-by-line from a source PNG file.
-- Removed zlib.dll (was v1.2.3, 18-Jul-2005). Not required.
+- Removed zlib.dll (was v1.2.3, 18-Jul-2005). Historically required by advdef.
 
 v1.0 25-Sep-2009
 - Release of version 1.0, with smarter, more efficient processing!
@@ -129,7 +130,7 @@ awaiting feedback from the community.
 - Simpler detection of 16bpp / unsupported images using pngout's exitcodes.
 - Added 'PngOptimizer' program which sets transparent (A=0) pixels to black and
 often improves compression. Although this is technically a lossy process removing
-color data, these regions will never be seen in the png image.
+color data, these regions will never be seen in the PNG image.
 - It may no longer be necessary to include 'pngrewrite', but until this has been
 tested, I will leave the script as is.
 - More trials with some logic to determine best color and filter combination. As
@@ -177,7 +178,7 @@ the script and setting the executable search path to this directory. This
 removes the need to edit the script manually; More user friendly.
 - The minimum block size was increased to be more practical (64 > 128bytes),
 reducing number of trials (hence time) for larger images.
-- Unsupported formats of png files (e.g. 16bpp) are checked for and skipped.
+- Unsupported formats of PNG files (e.g. 16bpp) are checked for and skipped.
 - Window title is more compact for easier viewing when minimized.
 - Added 'pngexpand' script to help avoid bugs in Photoshop and other editors.
 - 'readme.txt' file cleaned up.
@@ -223,7 +224,7 @@ Inspiration came from a script by JensRex (jens@jensrex.net) 11-Jun-2005
 Big thanks to: D.Blake, counting_pine, fred01, markcramer, K.Silverman, Sined,
 Thundik81, C.Truta, UncleBuck, Zardalu and others.
 Finally a massive thanks to all authors of the software on which this script
-depends, and those pioneers developing and optimizing the png standard.
+depends, and those pioneers developing and optimizing the PNG standard.
 
 
 https://github.com/ace-dent/pngslim/releases
