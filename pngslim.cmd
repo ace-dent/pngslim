@@ -321,11 +321,15 @@ echo %~z1b - Final compression sweep finished.
 
 :Stage99
 	:: if %~z1 GTR %OriginalFileSize% copy %1 %1._fail >nul
-	if %~z1 GEQ %OriginalFileSize% (
-		del %1
-		rename "%~1.backup" "%~nx1"
-		echo Original file restored; could not compress further.
+	if %~z1 LSS 67 (
+		echo %~z1b - Error detected: File too small.
+		goto RestoreFile
 	)
+	if %~z1 GEQ %OriginalFileSize% (
+		echo %~z1b - Could not compress file further.
+		goto RestoreFile
+	)
+	
 	set /a FileSize=%OriginalFileSize%-%~z1
 	set /a FileSizeReduction=(%FileSize%*100)/%OriginalFileSize%
 	set /a TotalBytesSaved+=%FileSize%
@@ -333,6 +337,12 @@ echo %~z1b - Final compression sweep finished.
 		del %1.backup
 		echo Optimized: "%~n1". Slimmed %FileSizeReduction%%%, %FileSize% bytes.
 	)
+	goto NextFile
+
+:RestoreFile
+	del %1
+	rename "%~1.backup" "%~nx1"
+	echo Original file restored.
 
 :NextFile
 	echo.
