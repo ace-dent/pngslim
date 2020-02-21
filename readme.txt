@@ -65,9 +65,11 @@ the pngslim package with 'pngout.exe' without prior arrangement.
 v1.1 2020
 - Added ForceRGBA option. Certain applications require PNG files to be in the 
 RGB+Alpha color mode, at the cost of compression. Default is off.
+- Added PNG validation: Basic file attributes tested (greater than 67 bytes).
+- Hardened script against malicious filename input (names properly enclosed).
 - Improved script readability: Indented with tabs; More consistent label and 
 variable naming; Expanded FOR loops over multiple lines; Avoid long lines 
-(<80chrs)
+(<80chrs); Executable commands are identified with '.exe'.
 - Fixed up typos and small details in Readme.
 - Bundled programs will no longer be UPX compressed. The space saving is not 
 necessary and provides a minor speed up. Programs' license information added.

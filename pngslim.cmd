@@ -1,7 +1,6 @@
 @echo off & setlocal enableextensions
 
 :: pngslim 
-:: v1.1 (01-Jan-2020)
 :: By Andrew C.E. Dent, dedicated to the Public Domain.
 
 set HuffmanTrials=15
@@ -11,7 +10,7 @@ set ForceRGBA=0
 
 set Version=(v1.1)
 
-echo Started batch %date% %time% - pngslim %Version%.
+echo Started %date% %time% - pngslim %Version%.
 echo.
 
 :: Check programs are available for the script
@@ -31,7 +30,7 @@ for %%i in (
 )
 
 :: Check some png files have been provided
-if .%1==. (
+if "%~a1"=="" (
 	echo Drag-and-drop a selection of PNG files to optimize them.
 	goto TheEnd
 )
@@ -40,23 +39,31 @@ set v=0 & :: - Verbose mode switch
 set FileSize=0
 set FileSizeReduction=0
 set TotalBytesSaved=0
-for %%i in (%*) do set /a TotalFiles+=1
+set TotalFiles=0
+
+for /f "tokens=*" %%i in ("%*") do (
+	for %%j in (%%i) do set /a TotalFiles+=1
+)
 
 
 :SelectFile
 	set /a CurrentFile+=1
-	if /I %~x1 NEQ .png goto NextFile
+	
+	:: Basic file validation
+	if /I "%~x1" NEQ ".png" goto NextFile
+	if %~z1 LSS 67 goto NextFile
+	
 	title [%CurrentFile%/%TotalFiles%] pngslim %Version%
-	echo %~z1b - Optimizing: %1
+	echo %~z1b - Optimizing: "%~1"
 	set OriginalFileSize=%~z1
-	copy %1 %1.backup >nul
+	copy "%~1" "%~1.backup" >nul
 
 
-:Stage10
-	pngout -q -s4 -f0 -c6 -k0 -force %1
+:PreprocessFile
+	pngout.exe -q -s4 -f0 -c6 -k0 -force "%~1"
 	if errorlevel 1 (
 		echo Cannot compress: Unsupported PNG format.
-		goto Stage99
+		goto PostprocessFile
 	)
 
 	if %v%==1 echo %~z1b - T0S1: Written uncompressed file with stripped metadata.
@@ -75,9 +82,9 @@ for %%i in (%*) do set /a TotalFiles+=1
 		goto T1_Step1_RGBA
 	)
 	
-	pngoptimizercl -file:%1 >nul
-	pngrewrite %1 %1
-	start /belownormal /b /wait pngout.exe -q -k1 -ks -s1 %1
+	:: pngoptimizercl.exe -file:"%~1" >nul
+	pngrewrite.exe "%~1" "%~1"
+	start /belownormal /b /wait pngout.exe -q -k1 -ks -s1 "%~1"
 	echo %~z1b - Lossy stage complete (optimized metadata, palette and transparency).
 
 
@@ -89,7 +96,7 @@ for %%i in (%*) do set /a TotalFiles+=1
 echo %~z1b - Compression trial 1 running (Color and filter settings)...
 
 :T1_Step1_Gray
-	pngout -q -s4 -c0 -d8 %1
+	pngout.exe -q -s4 -c0 -d8 "%~1"
 	if errorlevel 3 goto T1_Step1_Gray+Alpha
 	set ImageColorMode="Gray"
 	set ImageTransparencyMode="Basic" & :: Opaque or 1 transparent color
@@ -97,13 +104,13 @@ echo %~z1b - Compression trial 1 running (Color and filter settings)...
 		if %LargeFile%==0 (
 			for %%j in (1,2) do (
 				for /L %%k in (0,1,5) do ( 
-					pngout -q -k1 -s0 -d%%i -n%%j -f%%k -c0 %1
+					pngout.exe -q -k1 -s0 -d%%i -n%%j -f%%k -c0 "%~1"
 				)
 			)
 		) else (
 			for %%j in (0,256) do (
 				for %%k in (0,5) do (
-					pngout -q -k1 -s1 -d%%i -b%%j -f%%k -c0 %1
+					pngout.exe -q -k1 -s1 -d%%i -b%%j -f%%k -c0 "%~1"
 				)
 			)
 		)
@@ -112,7 +119,7 @@ echo %~z1b - Compression trial 1 running (Color and filter settings)...
 
 
 :T1_Step1_Gray+Alpha
-	pngout -q -s4 -c4 %1
+	pngout.exe -q -s4 -c4 "%~1"
 	if errorlevel 3 goto T1_Step1_Paletted
 	set ImageColorMode="Gray"
 	if %ImageTransparencyMode% NEQ "Basic" (
@@ -121,13 +128,13 @@ echo %~z1b - Compression trial 1 running (Color and filter settings)...
 	if %LargeFile%==0 (
 		for %%i in (1,2) do (
 			for /L %%j in (0,1,5) do (
-				pngout -q -k1 -s0 -n%%i -f%%j -c4 %1
+				pngout.exe -q -k1 -s0 -n%%i -f%%j -c4 "%~1"
 			)
 		)
 	) else (
 		for %%i in (0,256) do (
 			for %%j in (0,5) do (
-				pngout -q -k1 -s1 -b%%i -f%%j -c4 %1
+				pngout.exe -q -k1 -s1 -b%%i -f%%j -c4 "%~1"
 			)
 		)
 	)
@@ -135,7 +142,7 @@ echo %~z1b - Compression trial 1 running (Color and filter settings)...
 
 
 :T1_Step1_Paletted
-	pngout -q -s4 -c3 -d8 %1
+	pngout.exe -q -s4 -c3 -d8 "%~1"
 	if errorlevel 3 goto T1_Step1_RGB
 	if %ImageColorMode% NEQ "Gray" (
 		set ImageColorMode="Paletted" 
@@ -144,13 +151,13 @@ echo %~z1b - Compression trial 1 running (Color and filter settings)...
 		if %LargeFile%==0 (
 			for %%j in (1,2) do (
 				for /L %%k in (0,1,5) do (
-					pngout -q -k1 -s0 -d%%i -n%%j -f%%k -c3 %1
+					pngout.exe -q -k1 -s0 -d%%i -n%%j -f%%k -c3 "%~1"
 				)
 			)
 		) else (
 			for %%j in (0,256) do (
 				for %%k in (0,5) do (
-					pngout -q -k1 -s1 -d%%i -b%%j -f%%k -c3 %1
+					pngout.exe -q -k1 -s1 -d%%i -b%%j -f%%k -c3 "%~1"
 				)
 			)
 		)
@@ -160,7 +167,7 @@ echo %~z1b - Compression trial 1 running (Color and filter settings)...
 
 :T1_Step1_RGB
 	if %ImageColorMode%=="Gray" goto T1_Step2
-	pngout -q -s4 -c2 %1
+	pngout.exe -q -s4 -c2 "%~1"
 	if errorlevel 3 goto T1_Step1_RGBA
 	if %ImageColorMode% NEQ "Gray" (
 		if %ImageColorMode% NEQ "Paletted" (
@@ -171,13 +178,13 @@ echo %~z1b - Compression trial 1 running (Color and filter settings)...
 	if %LargeFile%==0 (
 		for %%i in (1,2) do (
 			for /L %%j in (0,1,5) do (
-				pngout -q -k1 -s0 -n%%i -f%%j -c2 %1
+				pngout.exe -q -k1 -s0 -n%%i -f%%j -c2 "%~1"
 			)
 		)
 	) else (
 		for %%i in (0,256) do (
 			for %%j in (0,5) do (
-				pngout -q -k1 -s1 -b%%i -f%%j -c2 %1
+				pngout.exe -q -k1 -s1 -b%%i -f%%j -c2 "%~1"
 			)
 		)
 	)
@@ -198,13 +205,13 @@ echo %~z1b - Compression trial 1 running (Color and filter settings)...
 	if %LargeFile%==0 (
 		for %%i in (1,2) do (
 			for /L %%j in (0,1,5) do (
-				pngout -q -k1 -s0 -n%%i -f%%j -c6 %1
+				pngout.exe -q -k1 -s0 -n%%i -f%%j -c6 "%~1"
 			)
 		)
 	) else (
 		for %%i in (0,256) do (
 			for %%j in (0,5) do (
-				pngout -q -k1 -s1 -b%%i -f%%j -c6 %1
+				pngout.exe -q -k1 -s1 -b%%i -f%%j -c6 "%~1"
 			)
 		)
 	)
@@ -216,23 +223,23 @@ echo %~z1b - Compression trial 1 running (Color and filter settings)...
 	if %LargeFile%==0 (
 		for %%i in (0,3) do (
 			for /L %%j in (0,1,5) do (
-				pngout -q -k1 -ks -s%%i -b256 -f%%j %1
+				pngout.exe -q -k1 -ks -s%%i -b256 -f%%j "%~1"
 			)
 		)
-		optipng -q -nb -nc -zc1-9 -zm8-9 -zs0-3 -f0-5 %1
-		if %ForceRGBA% NEQ 1 optipng -q -zc1-9 -zm8-9 -zs0-3 -f0-5 %1
+		optipng.exe -q -nb -nc -zc1-9 -zm8-9 -zs0-3 -f0-5 "%~1"
+		if %ForceRGBA% NEQ 1 optipng.exe -q -zc1-9 -zm8-9 -zs0-3 -f0-5 "%~1"
 	) else (
 		for %%i in (0,256) do (
 			for /L %%j in (1,1,4) do (
-				pngout -q -k1 -ks -s1 -b%%i -f%%j %1
+				pngout.exe -q -k1 -ks -s1 -b%%i -f%%j "%~1"
 			)
 		)
 		for /L %%j in (0,1,5) do (
-			pngout -q -k1 -ks -s1 -b128 -f%%j %1
+			pngout.exe -q -k1 -ks -s1 -b128 -f%%j "%~1"
 		)
-		start /belownormal /b /wait pngout -q -k1 -ks -s0 -n1 %1
-		optipng -q -nb -nc -zc9 -zm8 -zs0-3 -f0-5 %1
-		if %ForceRGBA% NEQ 1 optipng -q -zc9 -zm8 -zs0-3 -f0-5 %1
+		start /belownormal /b /wait pngout.exe -q -k1 -ks -s0 -n1 "%~1"
+		optipng.exe -q -nb -nc -zc9 -zm8 -zs0-3 -f0-5 "%~1"
+		if %ForceRGBA% NEQ 1 optipng.exe -q -zc9 -zm8 -zs0-3 -f0-5 "%~1"
 	)
 
 :T1_End
@@ -253,8 +260,8 @@ if %v%==1 echo %~z1b - T2S1: Seeking optimum number of Huffman blocks...
 
 :T2_Step1_Loop
 	set /a Huff_Blocks+=1
-	start /belownormal /b /wait pngout -q -k1 -ks -s3 -n%Huff_Blocks% %1
-	pngout -q -k1 -ks -s0 -n%Huff_Blocks% %1
+	start /belownormal /b /wait pngout.exe -q -k1 -ks -s3 -n%Huff_Blocks% "%~1"
+	pngout.exe -q -k1 -ks -s0 -n%Huff_Blocks% "%~1"
 	if errorlevel 2 set /a Huff_Count+=1
 	if %~z1 LSS %Huff_Base% (
 		set Huff_Count=0
@@ -279,7 +286,7 @@ if %v%==1 echo %~z1b - T2S1: Seeking optimum number of Huffman blocks...
 :T2_Step2_Loop
 	for /L %%i in (1,1,10) do (
 		for %%j in (0,2,3) do (
-			pngout -q -k1 -ks -s%%j -n%Huff_Blocks% -r %1
+			pngout.exe -q -k1 -ks -s%%j -n%Huff_Blocks% -r "%~1"
 		)
 	)
 	if %v%==1 echo %~z1b - T2S2: Tested %Huff_Blocks% block(s) with Deflate strategies 0,2,3.
@@ -300,7 +307,7 @@ if %v%==1 echo %~z1b - T2S1: Seeking optimum number of Huffman blocks...
 	set FileSize=%~z1
 	echo %~z1b - Compression trial 3 running (%RandomTableTrials%x random Huffman tables)...
 	for /L %%i in (1,1,%RandomTableTrials%) do (
-		start /belownormal /b /wait pngout -q -k1 -ks -s0 -r %1
+		start /belownormal /b /wait pngout.exe -q -k1 -ks -s0 -r "%~1"
 	)
 	if %~z1 LSS %FileSize% goto T3_Step1_Loop
 	echo %~z1b - Compression trial 3 complete (Randomized Huffman tables).
@@ -310,16 +317,16 @@ if %v%==1 echo %~z1b - T2S1: Seeking optimum number of Huffman blocks...
 ::
 
 for %%i in (32k,16k,8k,4k,2k,1k,512,256) do (
-	optipng -q -nb -nc -zw%%i -zc1-9 -zm1-9 -zs0-3 -f0-5 %1
+	optipng.exe -q -nb -nc -zw%%i -zc1-9 -zm1-9 -zs0-3 -f0-5 "%~1"
 )
 for /L %%i in (1,1,4) do (
-	advdef -q -z%%i %1
+	advdef.exe -q -z%%i "%~1"
 )
-deflopt -s -k %1 >nul
+deflopt.exe -s -k "%~1" >nul
 echo %~z1b - Final compression sweep finished.
 
 
-:Stage99
+:PostprocessFile
 	:: if %~z1 GTR %OriginalFileSize% copy %1 %1._fail >nul
 	if %~z1 LSS 67 (
 		echo %~z1b - Error detected: File too small.
@@ -334,24 +341,25 @@ echo %~z1b - Final compression sweep finished.
 	set /a FileSizeReduction=(%FileSize%*100)/%OriginalFileSize%
 	set /a TotalBytesSaved+=%FileSize%
 	if %~z1 LSS %OriginalFileSize% (
-		del %1.backup
+		del "%~1.backup"
 		echo Optimized: "%~n1". Slimmed %FileSizeReduction%%%, %FileSize% bytes.
 	)
 	goto NextFile
 
 :RestoreFile
-	del %1
+	del "%~1"
 	rename "%~1.backup" "%~nx1"
 	echo Original file restored.
 
 :NextFile
 	echo.
-	shift
-	if .%1==. goto Close
+	shift /1
+	if "%~a1"=="" goto Close
 	goto SelectFile
 
 :Close
 	title Optimization complete.
+	set TotalFiles=%CurrentFile%
 	echo.
 	echo Finished %date% %time% - pngslim %Version%.
 	echo Processed %TotalFiles% files. Slimmed %TotalBytesSaved% bytes.
