@@ -1,24 +1,32 @@
 @echo off & setlocal enableextensions
 
+
 :: pngslim 
-:: By Andrew C.E. Dent, dedicated to the Public Domain.
+::  - by Andrew C.E. Dent, dedicated to the Public Domain.
+
+set Version=(v1.1 pre-release)
 
 set HuffmanTrials=15
 set RandomTableTrials=100
 set LargeFileSize=66400
 set ForceRGBA=0
 
-set Version=(v1.1)
 
 echo Started %date% %time% - pngslim %Version%.
 echo.
 
 :: Check programs are available for the script
-pushd "%~dp0apps\" || echo Directory not found. && goto TheEnd
+pushd "%~dp0apps\"
+if errorlevel 1 (
+	echo Directory not found.
+	goto TheEnd
+)
+
 for %%i in (
 	advdef
 	deflopt
 	optipng
+	pngcheck
 	pngoptimizercl
 	pngout
 	pngrewrite 
@@ -29,7 +37,7 @@ for %%i in (
 	)
 )
 
-:: Check some png files have been provided
+:: Check some files have been provided
 if "%~a1"=="" (
 	echo Drag-and-drop a selection of PNG files to optimize them.
 	goto TheEnd
@@ -40,37 +48,62 @@ set FileSize=0
 set FileSizeReduction=0
 set TotalBytesSaved=0
 set TotalFiles=0
+set ErrorsLogged=0
 
+:: Count total files to process
 for /f "tokens=*" %%i in ("%*") do (
 	for %%j in (%%i) do set /a TotalFiles+=1
 )
 
-
 :SelectFile
 	set /a CurrentFile+=1
+	title [%CurrentFile%/%TotalFiles%] pngslim %Version%
 	
 	:: Basic file validation
 	if /I "%~x1" NEQ ".png" goto NextFile
 	if %~z1 LSS 67 goto NextFile
-	
-	title [%CurrentFile%/%TotalFiles%] pngslim %Version%
+
 	echo %~z1b - Optimizing: "%~1"
+
+	:: Check PNG file for errors
+	pngcheck.exe -q "%~1"
+	if errorlevel 1 (
+		pngcheck.exe -vvt "%~1" > "%~1".error.log
+		set /a ErrorsLogged+=1
+		echo Error detected: Skipped invalid file.
+		goto NextFile
+	)
+
 	set OriginalFileSize=%~z1
-	copy "%~1" "%~1.backup" >nul
+
+	copy /Z "%~1" "%~1.backup" >nul
+	fc.exe /B "%~1" "%~1.backup" >nul
+	if errorlevel 1 (
+		set /a ErrorsLogged+=1
+		echo System error: Backup file corrupted.
+		goto Close
+	)
 
 
 :PreprocessFile
+
+	:: Losslessly reduce 16 to 8bit per channel, if possible
+	optipng.exe -q -i0 -zc1 -zm8 -zs0 -f0 -force "%~1"
+
+	:: Strip metadata and create an uncompressed, 32bpp RGBA bitmap
 	pngout.exe -q -s4 -f0 -c6 -k0 -force "%~1"
 	if errorlevel 1 (
 		echo Cannot compress: Unsupported PNG format.
-		goto PostprocessFile
+		goto RestoreFile
 	)
-
 	if %v%==1 echo %~z1b - T0S1: Written uncompressed file with stripped metadata.
+
 	set ImageColorMode="Undetermined"
 	set ImageTransparencyMode="Undetermined"
+
 	set LargeFile=0
 	if %~z1 GTR %LargeFileSize% set LargeFile=1
+
 	set /a Huff_MaxBlocks=%~z1/256
 	if %Huff_MaxBlocks% GTR 512 set Huff_MaxBlocks=512
 	if %v%==1 echo %~z1b - T0S2: File metrics: Max Huff blocks %Huff_MaxBlocks%, Large file: %LargeFile%.
@@ -83,8 +116,8 @@ for /f "tokens=*" %%i in ("%*") do (
 	)
 	
 	:: pngoptimizercl.exe -file:"%~1" >nul
-	pngrewrite.exe "%~1" "%~1"
-	start /belownormal /b /wait pngout.exe -q -k1 -ks -s1 "%~1"
+	pngrewrite.exe "%~1" "%~1" 2>nul
+	pngout.exe -q -k1 -ks -s1 "%~1"
 	echo %~z1b - Lossy stage complete (optimized metadata, palette and transparency).
 
 
@@ -312,6 +345,8 @@ if %v%==1 echo %~z1b - T2S1: Seeking optimum number of Huffman blocks...
 	if %~z1 LSS %FileSize% goto T3_Step1_Loop
 	echo %~z1b - Compression trial 3 complete (Randomized Huffman tables).
 
+
+
 ::
 :: Trial (4) - Final compression sweep
 ::
@@ -327,28 +362,44 @@ echo %~z1b - Final compression sweep finished.
 
 
 :PostprocessFile
-	:: if %~z1 GTR %OriginalFileSize% copy %1 %1._fail >nul
+
+	:: Basic output file validation
 	if %~z1 LSS 67 (
 		echo %~z1b - Error detected: File too small.
+		set /a ErrorsLogged+=1
 		goto RestoreFile
 	)
 	if %~z1 GEQ %OriginalFileSize% (
 		echo %~z1b - Could not compress file further.
 		goto RestoreFile
 	)
+
+	:: Check output PNG file for errors
+	pngcheck.exe -q "%~1"
+	if errorlevel 1 (
+		pngcheck.exe -vvt "%~1" > "%~1".error.log
+		set /a ErrorsLogged+=1
+		echo Error detected: Optimized file is not valid.
+		goto RestoreFile
+	)
 	
 	set /a FileSize=%OriginalFileSize%-%~z1
 	set /a FileSizeReduction=(%FileSize%*100)/%OriginalFileSize%
 	set /a TotalBytesSaved+=%FileSize%
-	if %~z1 LSS %OriginalFileSize% (
-		del "%~1.backup"
-		echo Optimized: "%~n1". Slimmed %FileSizeReduction%%%, %FileSize% bytes.
-	)
+
+	echo Optimized: "%~n1". Slimmed %FileSizeReduction%%%, %FileSize% bytes.
+	del "%~1.backup"
 	goto NextFile
+
 
 :RestoreFile
 	del "%~1"
 	rename "%~1.backup" "%~nx1"
+	if errorlevel 1 (
+		set /a ErrorsLogged+=1
+		echo System error: Failed to rename backup file.
+		goto Close
+	)
 	echo Original file restored.
 
 :NextFile
@@ -363,6 +414,11 @@ echo %~z1b - Final compression sweep finished.
 	echo.
 	echo Finished %date% %time% - pngslim %Version%.
 	echo Processed %TotalFiles% files. Slimmed %TotalBytesSaved% bytes.
+	if %ErrorsLogged% GTR 0 (
+		echo.
+		echo WARNING! %ErrorsLogged% Errors logged.
+		echo.
+	)
 
 :TheEnd
 	popd

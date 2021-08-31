@@ -2,7 +2,7 @@
 pngslim
  - when every byte counts!
 
-Andrew C.E. Dent, 2020.
+Andrew C.E. Dent, 2021.
 
 
 Batch optimization of PNG images for MS Windows, using multiple tools to 
@@ -19,26 +19,32 @@ which may cause problems displaying these optimized images.
 2. Then just drag & drop* your PNG files on 'pngslim.cmd' to run.
 3. Have fun slimming away those surplus bytes! :-)
 
-For advanced users please tweak the script to your needs.
-- HuffmanTrials: When adjusting the number of Huffman blocks, the number of
- consecutive failed attempts to reduce file size, before quitting the trial.
- From testing 15 (default) works great, with higher numbers giving little
- benefit. For faster processing reduce to 2.
-- RandomTableTrials : Number of trials with randomized Huffman tables (default 
-100). To squeeze out a few extra bytes set to 500. For fast processing set to 1.
-- LargeFileSize : The uncompressed file size in bytes that determines a small/
- large image and adjusts processing effort accordingly. The default 66400 bytes
- corresponds to an image larger than 128 x 128 pixels. 
-- ForceRGBA : (0/1) will first rewrite the image as RGBA and then only optimize 
- in that color mode, or restore the original if not compressed. This limits the 
- possible compression methods, so is not recommended (default ForceRGBA=0).
-
 * Note: Due to limitations of MS Windows, the maximum number of files that you
 can drag & drop depends on the total text length of the image file paths+names.
 If the script doesn't run or you see the following error message :
 "Windows cannot access the specified device, path, or file...",
 you should reduce the number of selected files (typically <100), and consider 
 moving your files to shorten the path names (e.g. "C:\png\").
+
+
+For advanced users please tweak the script to your needs.
+
+- HuffmanTrials: When adjusting the number of Huffman blocks, the number of
+ consecutive failed attempts to reduce file size, before quitting the trial.
+ From testing 15 (default) works great, with higher numbers giving little
+ benefit. For faster processing reduce to 2.
+
+- RandomTableTrials : Number of trials with randomized Huffman tables (default 
+100). To squeeze out a few extra bytes set to 500. For fast processing set to 1.
+
+- LargeFileSize : The uncompressed file size in bytes that determines a small/
+ large image and adjusts processing effort accordingly. The default 66400 bytes
+ corresponds to an image larger than 128 x 128 pixels. 
+
+- ForceRGBA : (0/1) will first rewrite the image as RGBA (32 bits per pixel)
+ and then only optimize in that color mode, or restore the original if not 
+ compressed. This limits the possible compression methods and may generate an 
+ unneccessary alpha channel, so is not recommended (default is off ForceRGBA=0). 
 
 
 # Legal
@@ -62,17 +68,19 @@ the pngslim package with 'pngout.exe' without prior arrangement.
 
 # History
 
-v1.1 2020
+v1.1 31-Aug-2021
 - Added ForceRGBA option. Certain applications require PNG files to be in the 
 RGB+Alpha color mode, at the cost of compression. Default is off.
-- Added PNG validation: Basic file attributes tested (greater than 67 bytes).
+- Added PNG validation: Basic file attributes tested (greater than 67 bytes); 
+File data checked with pngcheck on input and output.
 - Hardened script against malicious filename input (names properly enclosed).
 - Improved script readability: Indented with tabs; More consistent label and 
 variable naming; Expanded FOR loops over multiple lines; Avoid long lines 
-(<80chrs); Executable commands are identified with '.exe'.
+(<80chrs); External commands (executables) are identified with '.exe'.
 - Fixed up typos and small details in Readme.
 - Bundled programs will no longer be UPX compressed. The space saving is not 
 necessary and provides a minor speed up. Programs' license information added.
+- Added 'pngcheck.exe' program v3.0.3 (25-Apr-2021) for file validation.
 - Updated 'pngrewrite.exe' to version 1.4.0 (was 1.3.0). Maintenance release.
 - Updated 'pngout.exe' to 13-Feb-2015 release (was 22-Sep-2009). This gives 
 better randomness when the -r switch is used; Fixes -f5 to generate block 
@@ -197,7 +205,7 @@ v0.6 01-Jan-2007
 # Included programs
 
 Note: I have no affiliation with the authors of the included software.
-Please read the comments under the 'Legal' section of this readme!
+Please read the comments under the 'Legal' section of this readme.
 
 - advdef.exe v1.15 (31-Oct-2005) 
    http://advancemame.sourceforge.net/comp-readme.html
@@ -207,6 +215,9 @@ Please read the comments under the 'Legal' section of this readme!
 
 - OptiPNG.exe v0.6.3 (18-May-2009) by C.Truta
    http://optipng.sourceforge.net/
+
+- pngcheck.exe v3.0.3 (25-Apr-2021) by Alexander Lehmann, Andreas Dilger, Greg Roelofs.
+   http://www.libpng.org/pub/png/apps/pngcheck.html
 
 - PngOptimizerCL.exe v1.8 (6-Nov-2008) by H.Nilsson
    http://psydk.org/PngOptimizer.php
