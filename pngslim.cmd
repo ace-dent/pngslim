@@ -23,15 +23,16 @@ if errorlevel 1 (
 )
 
 for %%i in (
-	advdef
-	deflopt
-	optipng
-	pngcheck
-	pngoptimizercl
-	pngout
-	pngrewrite 
+	advdef.exe
+	deflopt.exe
+	optipng.exe
+	pngcheck.exe
+	pngoptimizercl.exe
+	pngout.exe
+	pngrewrite.exe
+	zlib.dll
 ) do (
-	if not exist %%i.exe (
+	if not exist %%i (
 		echo Program not found: %%i.
 		goto TheEnd
 	)

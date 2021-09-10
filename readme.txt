@@ -68,25 +68,30 @@ the pngslim package with 'pngout.exe' without prior arrangement.
 
 # History
 
-v1.1 31-Aug-2021
+v1.1 11-Sep-2021
+- Added an early trial with OptiPNG, to losslessly reduce 16 to 8 bit per 
+  channel. True 16bpc files are still rejected.
 - Added ForceRGBA option. Certain applications require PNG files to be in the 
-RGB+Alpha color mode, at the cost of compression. Default is off.
+  RGB+Alpha color mode, at the cost of compression. Default is off.
 - Added PNG validation: Basic file attributes tested (greater than 67 bytes); 
-File data checked with pngcheck on input and output.
+  File data checked with pngcheck on input and output.
 - Hardened script against malicious filename input (names properly enclosed).
 - Improved script readability: Indented with tabs; More consistent label and 
-variable naming; Expanded FOR loops over multiple lines; Avoid long lines 
-(<80chrs); External commands (executables) are identified with '.exe'.
+  variable naming; Expanded FOR loops over multiple lines; Avoid long lines 
+  (<80chrs); External commands (executables) are identified with '.exe'.
 - Fixed up typos and small details in Readme.
 - Bundled programs will no longer be UPX compressed. The space saving is not 
-necessary and provides a minor speed up. Programs' license information added.
+  necessary and provides a minor speed up. Programs' license information added.
 - Added 'pngcheck.exe' program v3.0.3 (25-Apr-2021) for file validation.
+- Updated 'OptiPNG.exe' to v0.7.7 (was v0.6.3). Unpacked the distributed file,
+  removing UPX compression. Various vulnerability fixes; Upgrades libpng and 
+  zlib; Adds options -nx, -strip, -clobber, -debug; Changes the activity 
+  display output from STDOUT to STDERR.
 - Updated 'pngrewrite.exe' to version 1.4.0 (was 1.3.0). Maintenance release.
 - Updated 'pngout.exe' to 13-Feb-2015 release (was 22-Sep-2009). This gives 
-better randomness when the -r switch is used; Fixes -f5 to generate block 
-boundaries in a consistent and correct manner; Adds -f6 option to reuse filters 
-line-by-line from a source PNG file.
-- Removed zlib.dll (was v1.2.3, 18-Jul-2005). Historically required by advdef.
+  better randomness when the -r switch is used; Fixes -f5 to generate block 
+  boundaries in a consistent and correct manner; Adds -f6 option to reuse 
+  filters line-by-line from a source PNG file.
 
 v1.0 25-Sep-2009
 - Release of version 1.0, with smarter, more efficient processing!
@@ -167,7 +172,7 @@ v0.91 21-Aug-2007
 settings. This may occasionally find better color and filter parameters,
 improving compression.
 - Used UPX 3.01 (--ultra-brute) to compress the packaged software except for
-pngout.exe and optipng.exe (it seems the originals are already compressed).
+pngout.exe and OptiPNG.exe (it seems the originals are already compressed).
 - Updated 'readme.txt', reformatted for fixed width and included details of
 'pngout' license.
 
@@ -207,13 +212,13 @@ v0.6 01-Jan-2007
 Note: I have no affiliation with the authors of the included software.
 Please read the comments under the 'Legal' section of this readme.
 
-- advdef.exe v1.15 (31-Oct-2005) 
-   http://advancemame.sourceforge.net/comp-readme.html
+- advdef.exe v1.15 (31-Oct-2005) by Andrea Mazzoleni.
+   http://www.advancemame.it/comp-readme.html
 
 - DeflOpt.exe v2.07 (05-Sep-2007) by Ben Jos Walbeehm.
    http://web.archive.org/web/20131208161446/http://www.walbeehm.com/download/index.html
 
-- OptiPNG.exe v0.6.3 (18-May-2009) by C.Truta
+- OptiPNG.exe v0.7.7 (27-Dec-2017) by Cosmin Truta.
    http://optipng.sourceforge.net/
 
 - pngcheck.exe v3.0.3 (25-Apr-2021) by Alexander Lehmann, Andreas Dilger, Greg Roelofs.
@@ -222,12 +227,14 @@ Please read the comments under the 'Legal' section of this readme.
 - PngOptimizerCL.exe v1.8 (6-Nov-2008) by H.Nilsson
    http://psydk.org/PngOptimizer.php
 
-- pngout.exe (13-Feb-2015) by Ken Silverman
+- pngout.exe (13-Feb-2015) by Ken Silverman.
    http://advsys.net/ken/utils.htm
 
-- pngrewrite.exe v1.4.0 (8-Jun-2010) by Jason Summer
+- pngrewrite.exe v1.4.0 (8-Jun-2010) by Jason Summer.
    http://entropymine.com/jason/pngrewrite/
 
+- zlib.dll v1.2.3 (18-Jul-2005) by Jean-loup Gailly and Mark Adler.
+   http://www.zlib.net/
 
 
 # Thanks!
@@ -235,7 +242,7 @@ Please read the comments under the 'Legal' section of this readme.
 Inspiration came from a script by JensRex (jens@jensrex.net) 11-Jun-2005
 (http://hydrogenaudio.org/forums/?showtopic=22036).
 Big thanks to: D.Blake, counting_pine, fred01, markcramer, K.Silverman, Sined,
-Thundik81, C.Truta, UncleBuck, Zardalu and others.
+Thundik81, Cosmin Truta, UncleBuck, Zardalu, Greg Roelofs and others.
 Finally a massive thanks to all authors of the software on which this script
 depends, and those pioneers developing and optimizing the PNG standard.
 
