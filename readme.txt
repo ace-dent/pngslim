@@ -68,7 +68,7 @@ the pngslim package with 'pngout.exe' without prior arrangement.
 
 # History
 
-v1.1 11-Sep-2021
+v1.1 12-Sep-2021
 - Added an early trial with OptiPNG, to losslessly reduce 16 to 8 bit per 
   channel. True 16bpc files are still rejected.
 - Added ForceRGBA option. Certain applications require PNG files to be in the 
@@ -241,8 +241,8 @@ Please read the comments under the 'Legal' section of this readme.
 
 Inspiration came from a script by JensRex (jens@jensrex.net) 11-Jun-2005
 (http://hydrogenaudio.org/forums/?showtopic=22036).
-Big thanks to: D.Blake, counting_pine, fred01, markcramer, K.Silverman, Sined,
-Thundik81, Cosmin Truta, UncleBuck, Zardalu, Greg Roelofs and others.
+Big thanks to: D.Blake, counting_pine, fred01, Greg Roelofs, markcramer, 
+Ken Silverman, Sined, Thundik81, Cosmin Truta, UncleBuck, Zardalu and others.
 Finally a massive thanks to all authors of the software on which this script
 depends, and those pioneers developing and optimizing the PNG standard.
 

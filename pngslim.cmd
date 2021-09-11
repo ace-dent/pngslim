@@ -4,7 +4,7 @@
 :: pngslim 
 ::  - by Andrew C.E. Dent, dedicated to the Public Domain.
 
-set Version=(v1.1 pre-release)
+set Version=(v1.1)
 
 set HuffmanTrials=15
 set RandomTableTrials=100
