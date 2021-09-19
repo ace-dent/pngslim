@@ -88,7 +88,8 @@ Big thanks to: David Blake, counting_pine, fred01, Greg Roelofs, markcramer, Ken
 
 ## History
 
-**v1.2 Development 2021**
+**v1.2 Development 2021** 
+- Script readability: indents changed from tabs to spaces.  
 - Reformatted readme for markdown and tweaked text.
 
 **v1.1 12-Sep-2021**
