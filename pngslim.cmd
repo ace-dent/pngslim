@@ -118,7 +118,7 @@
   
   :: pngoptimizercl.exe -file:"%~1" >nul
   pngrewrite.exe "%~1" "%~1" 2>nul
-  pngout.exe -q -k1 -ks -s1 "%~1"
+  pngout.exe -q -k1 -ks -kp -f6 -s1 "%~1"
   echo %~z1b - Preprocessing complete (optimized metadata, palette and transparency).
 
 
@@ -262,7 +262,7 @@
   if %LargeFile%==0 (
     for %%i in (0,3) do (
       for /L %%j in (0,1,5) do (
-        pngout.exe -q -k1 -ks -s%%i -b256 -f%%j "%~1"
+        pngout.exe -q -k1 -ks -kp -s%%i -b256 -f%%j "%~1"
       )
     )
     optipng.exe -q -nb -nc -zc1-9 -zm8-9 -zs0-3 -f0-5 "%~1"
@@ -271,13 +271,13 @@
   if %LargeFile%==1 (
     for %%i in (0,256) do (
       for /L %%j in (1,1,4) do (
-        pngout.exe -q -k1 -ks -s1 -b%%i -f%%j "%~1"
+        pngout.exe -q -k1 -ks -kp -s1 -b%%i -f%%j "%~1"
       )
     )
     for /L %%j in (0,1,5) do (
-      pngout.exe -q -k1 -ks -s1 -b128 -f%%j "%~1"
+      pngout.exe -q -k1 -ks -kp -s1 -b128 -f%%j "%~1"
     )
-    start /belownormal /b /wait pngout.exe -q -k1 -ks -s0 -n1 "%~1"
+    start /belownormal /b /wait pngout.exe -q -k1 -ks -kp -f6 -s0 -n1 "%~1"
     optipng.exe -q -nb -nc -zc9 -zm8 -zs0-3 -f0-5 "%~1"
     if %ForceRGBA% NEQ 1 optipng.exe -q -zc9 -zm8 -zs0-3 -f0-5 "%~1"
   )
@@ -300,8 +300,8 @@
 
 :T2_Step1_Loop
   set /a Huff_Blocks+=1
-  start /belownormal /b /wait pngout.exe -q -k1 -ks -s3 -n%Huff_Blocks% "%~1"
-  pngout.exe -q -k1 -ks -s0 -n%Huff_Blocks% "%~1"
+  start /belownormal /b /wait pngout.exe -q -k1 -ks -kp -f6 -s3 -n%Huff_Blocks% "%~1"
+  pngout.exe -q -k1 -ks -kp -f6 -s0 -n%Huff_Blocks% "%~1"
   if errorlevel 2 set /a Huff_Count+=1
   if %~z1 LSS %Huff_Base% (
     set Huff_Count=0
@@ -326,7 +326,7 @@
 :T2_Step2_Loop
   for /L %%i in (1,1,10) do (
     for %%j in (0,2,3) do (
-      pngout.exe -q -k1 -ks -s%%j -n%Huff_Blocks% -r "%~1"
+      pngout.exe -q -k1 -ks -kp -f6 -s%%j -n%Huff_Blocks% -r "%~1"
     )
   )
   if %v%==1 echo %~z1b - T2S2: Tested %Huff_Blocks% block(s) with Deflate strategies 0,2,3.
@@ -347,7 +347,7 @@
   set FileSize=%~z1
   echo %~z1b - Compression trial 3 running (%RandomTableTrials%x random Huffman tables)...
   for /L %%i in (1,1,%RandomTableTrials%) do (
-    start /belownormal /b /wait pngout.exe -q -k1 -ks -s0 -r "%~1"
+    start /belownormal /b /wait pngout.exe -q -k1 -ks -kp -f6 -s0 -r "%~1"
   )
   if %~z1 LSS %FileSize% goto T3_Step1_Loop
   echo %~z1b - Compression trial 3 complete (Randomized Huffman tables).
