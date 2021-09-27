@@ -89,7 +89,7 @@
 :PreprocessFile
 
   :: Losslessly reduce 16 to 8bit per channel, if possible
-  optipng.exe -q -i0 -zc1 -zm8 -zs0 -f0 -force "%~1"
+  optipng.exe -q -i0 -zc1 -zm8 -zs3 -f0 -force "%~1"
   
   :: Strip metadata and create an uncompressed, 32bpp RGBA bitmap
   pngout.exe -q -s4 -f0 -c6 -k0 -force "%~1"
@@ -265,7 +265,7 @@
         pngout.exe -q -k1 -ks -kp -s%%i -b256 -f%%j "%~1"
       )
     )
-    optipng.exe -q -nb -nc -zc1-9 -zm8-9 -zs0-3 -f0-5 "%~1"
+    optipng.exe -q -nx -zc1-9 -zm8-9 -zs0-3 -f0-5 "%~1"
     if %ForceRGBA% NEQ 1 optipng.exe -q -zc1-9 -zm8-9 -zs0-3 -f0-5 "%~1"
   )
   if %LargeFile%==1 (
@@ -278,7 +278,7 @@
       pngout.exe -q -k1 -ks -kp -s1 -b128 -f%%j "%~1"
     )
     start /belownormal /b /wait pngout.exe -q -k1 -ks -kp -f6 -s0 -n1 "%~1"
-    optipng.exe -q -nb -nc -zc9 -zm8 -zs0-3 -f0-5 "%~1"
+    optipng.exe -q -nx -zc9 -zm8 -zs0-3 -f0-5 "%~1"
     if %ForceRGBA% NEQ 1 optipng.exe -q -zc9 -zm8 -zs0-3 -f0-5 "%~1"
   )
 
@@ -359,7 +359,7 @@
 ::
 
   for %%i in (32k,16k,8k,4k,2k,1k,512,256) do (
-    optipng.exe -q -nb -nc -zw%%i -zc1-9 -zm1-9 -zs0-3 -f0-5 "%~1"
+    optipng.exe -q -nx -zw%%i -zc1-9 -zm1-9 -zs0-3 -f0-5 "%~1"
   )
   for /L %%i in (1,1,4) do (
     advdef.exe -q -z%%i "%~1"

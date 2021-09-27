@@ -89,7 +89,8 @@ Big thanks to: David Blake, counting_pine, fred01, Greg Roelofs, markcramer, Ken
 ## History
 
 **v1.2 Development 2021** 
-- Fix pngout parameters for efficiency; where possible use `-kp` to avoid palette trials and `-f6` to avoid filter trials. 
+- Fix pngout parameters for efficiency; where possible use `-kp` to avoid palette trials and `-f6` to avoid filter trials.
+- Change OptiPNG parameters `−nb −nc −np` to the more compact `-nx`, when disabling all lossless image reductions.
 - Script readability: indents changed from tabs to spaces.  
 - Reformatted readme for markdown and tweaked text.
 
