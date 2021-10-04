@@ -89,10 +89,10 @@ Big thanks to: David Blake, counting_pine, fred01, Greg Roelofs, markcramer, Ken
 ## History
 
 **v1.2 Development 2021** 
-- Fix pngout parameters for efficiency; where possible use `-kp` to avoid palette trials and `-f6` to avoid filter trials.
-- Change OptiPNG parameters `−nb −nc −np` to the more compact `-nx`, when disabling all lossless image reductions.
-- Script readability: indents changed from tabs to spaces.  
-- Reformatted readme for markdown and tweaked text.
+- Added pngout parameters for efficiency and correctness: use `-kp` to avoid palette trials and `-f6` to avoid filter trials, where possible.
+- Changed OptiPNG parameters `−nb −nc −np` to the more compact `-nx`, when disabling all lossless image reductions.
+- Improved script readability: indents changed from tabs to spaces;  removed use of `start /belownormal` to run pngout; removed inline comments.
+- Reformatted 'README' for markdown and tweaked text.
 
 **v1.1 12-Sep-2021**
 - Added an early trial with OptiPNG, to losslessly reduce 16 to 8 bit per channel. True 16bpc files are still rejected as 'unsupported'.

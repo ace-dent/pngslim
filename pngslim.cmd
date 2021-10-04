@@ -44,7 +44,9 @@
     goto TheEnd
   )
   
-  set v=0 & :: - Verbose mode switch
+  set v=0
+  :: - Verbose mode switch
+  
   set FileSize=0
   set FileSizeReduction=0
   set TotalBytesSaved=0
@@ -133,7 +135,7 @@
   pngout.exe -q -s4 -c0 -d8 "%~1"
   if errorlevel 3 goto T1_Step1_Gray+Alpha
   set ImageColorMode="Gray"
-  set ImageTransparencyMode="Basic" & :: Opaque or 1 transparent color
+  set ImageTransparencyMode="Basic"
   for %%i in (1,2,4,8) do (
     if %LargeFile%==0 (
       for %%j in (1,2) do (
@@ -211,7 +213,7 @@
       set ImageColorMode="RGB" 
     )
   )
-  set ImageTransparencyMode="Basic" & :: Opaque or 1 transparent color
+  set ImageTransparencyMode="Basic"
   if %LargeFile%==0 (
     for %%i in (1,2) do (
       for /L %%j in (0,1,5) do (
@@ -277,7 +279,7 @@
     for /L %%j in (0,1,5) do (
       pngout.exe -q -k1 -ks -kp -s1 -b128 -f%%j "%~1"
     )
-    start /belownormal /b /wait pngout.exe -q -k1 -ks -kp -f6 -s0 -n1 "%~1"
+    pngout.exe -q -k1 -ks -kp -f6 -s0 -n1 "%~1"
     optipng.exe -q -nx -zc9 -zm8 -zs0-3 -f0-5 "%~1"
     if %ForceRGBA% NEQ 1 optipng.exe -q -zc9 -zm8 -zs0-3 -f0-5 "%~1"
   )
@@ -300,7 +302,7 @@
 
 :T2_Step1_Loop
   set /a Huff_Blocks+=1
-  start /belownormal /b /wait pngout.exe -q -k1 -ks -kp -f6 -s3 -n%Huff_Blocks% "%~1"
+  pngout.exe -q -k1 -ks -kp -f6 -s3 -n%Huff_Blocks% "%~1"
   pngout.exe -q -k1 -ks -kp -f6 -s0 -n%Huff_Blocks% "%~1"
   if errorlevel 2 set /a Huff_Count+=1
   if %~z1 LSS %Huff_Base% (
@@ -347,7 +349,7 @@
   set FileSize=%~z1
   echo %~z1b - Compression trial 3 running (%RandomTableTrials%x random Huffman tables)...
   for /L %%i in (1,1,%RandomTableTrials%) do (
-    start /belownormal /b /wait pngout.exe -q -k1 -ks -kp -f6 -s0 -r "%~1"
+    pngout.exe -q -k1 -ks -kp -f6 -s0 -r "%~1"
   )
   if %~z1 LSS %FileSize% goto T3_Step1_Loop
   echo %~z1b - Compression trial 3 complete (Randomized Huffman tables).
