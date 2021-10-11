@@ -16,7 +16,7 @@ WARNING: Although this software produces fully compliant PNG images, a minority 
 ## Usage
 
 1. Unzip the 'pngslim' folder and place in your chosen location.
-2. Then just drag & drop* your PNG files on 'pngslim.cmd' to run.
+2. Drag & drop* your PNG files on `pngslim.cmd` to run.
 3. Have fun slimming away those surplus bytes! :-)
 
 \* Note : Due to limitations of MS Windows, the maximum number of files that you can drag & drop depends on the total text length of the image file paths+names. If the script doesn't run or you see the following error message : "Windows cannot access the specified device, path, or file...", you should reduce the number of selected files (typically <100), and consider moving your files to shorten the path names (e.g. "C:\png\").
@@ -42,7 +42,7 @@ it and redistribute it freely*. The software is dedicated to the Public Domain.
 
 The additional software included in the 'pngslim' package ('apps') is provided for convenience. The additional software is the property of other authors and may be subject to different licensing and legal conditions. Please check the original authors' websites for details and latest information.
 
-\* The license for 'pngout.exe' restricts how the software may be distributed:
+\* The license for PNGOUT restricts how the software may be distributed:
 http://www.advsys.net/ken/utils.htm#pngoutkziplicense . Its inclusion is by kind permission of Ken Silverman and David Blake. Therefore, you may not redistribute the pngslim package with 'pngout.exe' without prior arrangement.
 
 
@@ -52,28 +52,28 @@ http://www.advsys.net/ken/utils.htm#pngoutkziplicense . Its inclusion is by kind
 Note: I have no affiliation with the authors of the included software.
 Please read the comments under the 'Legal' section of this readme.
 
-- advdef.exe v1.15 (31-Oct-2005) by Andrea Mazzoleni.
+- advdef v1.15 (31-Oct-2005) by Andrea Mazzoleni. <br>
    http://www.advancemame.it/comp-readme.html
 
-- DeflOpt.exe v2.07 (05-Sep-2007) by Ben Jos Walbeehm.
+- DeflOpt v2.07 (05-Sep-2007) by Ben Jos Walbeehm. <br>
    http://web.archive.org/web/20131208161446/http://www.walbeehm.com/download/index.html
 
-- OptiPNG.exe v0.7.7 (27-Dec-2017) by Cosmin Truta.
+- OptiPNG v0.7.7 (27-Dec-2017) by Cosmin Truta. <br>
    http://optipng.sourceforge.net/
 
-- pngcheck.exe v3.0.3 (25-Apr-2021) by Alexander Lehmann, Andreas Dilger, Greg Roelofs.
+- pngcheck v3.0.3 (25-Apr-2021) by Alexander Lehmann, Andreas Dilger, Greg Roelofs. <br>
    http://www.libpng.org/pub/png/apps/pngcheck.html
 
-- PngOptimizerCL.exe v1.8 (6-Nov-2008) by Hadrien Nilsson
+- PngOptimizerCL v1.8 (6-Nov-2008) by Hadrien Nilsson <br>
    http://psydk.org/PngOptimizer.php
 
-- pngout.exe (13-Feb-2015) by Ken Silverman.
+- PNGOUT (13-Feb-2015) by Ken Silverman. <br>
    http://advsys.net/ken/utils.htm
 
-- pngrewrite.exe v1.4.0 (8-Jun-2010) by Jason Summer.
+- pngrewrite v1.4.0 (8-Jun-2010) by Jason Summer. <br>
    http://entropymine.com/jason/pngrewrite/
 
-- zlib.dll v1.2.3 (18-Jul-2005) by Jean-Loup Gailly and Mark Adler.
+- zlib v1.2.3 (18-Jul-2005) by Jean-Loup Gailly and Mark Adler. <br>
    http://www.zlib.net/
 
 
@@ -82,16 +82,16 @@ Please read the comments under the 'Legal' section of this readme.
 
 Inspiration came from a script by Jens Rex, 11-Jun-2005. http://hydrogenaudio.org/forums/?showtopic=22036
 
-Big thanks to: David Blake, counting_pine, fred01, Greg Roelofs, markcramer, Ken Silverman, Sined, Thundik81, Cosmin Truta, UncleBuck, Zardalu and others. Finally a massive thanks to all authors of the software on which this script depends, and those pioneers developing and optimizing the PNG standard.
+Big thanks to: David Blake, counting_pine, fred01, markcramer, Greg Roelofs, Ken Silverman, Sined, Thundik81, Cosmin Truta, UncleBuck, Zardalu and others. Finally a massive thanks to all authors of the software on which this script depends, and those pioneers developing and optimizing the PNG standard.
 
 
 
 ## History
 
 **v1.2 Development 2021** 
-- Added pngout parameters for efficiency and correctness: use `-kp` to avoid palette trials and `-f6` to avoid filter trials, where possible.
+- Added PNGOUT parameters for efficiency and correctness: use `-kp` to avoid palette trials and `-f6` to avoid filter trials, where possible.
 - Changed OptiPNG parameters `−nb −nc −np` to the more compact `-nx`, when disabling all lossless image reductions.
-- Improved script readability: indents changed from tabs to spaces;  removed use of `start /belownormal` to run pngout; removed inline comments.
+- Improved script readability: indents changed from tabs to spaces(!);  removed use of `start /belownormal` to run PNGOUT; removed inline comments.
 - Reformatted 'README' for markdown and tweaked text.
 
 **v1.1 12-Sep-2021**
@@ -117,17 +117,17 @@ Big thanks to: David Blake, counting_pine, fred01, Greg Roelofs, markcramer, Ken
 **v1.0beta3 23-Sep-2009**
 - Update introduces first step in making the script a bit smarter and efficient.
 - Bug fix, for setting the program path using the 'App' directory (from 1.0b2).
-- Improved the routine for determining the optimum number of Huffman blocks, and the Deflate strategy used by pngout. It should be noticeably faster for large images, and may yield better compression in some cases.
+- Improved the routine for determining the optimum number of Huffman blocks, and the Deflate strategy used by PNGOUT. It should be noticeably faster for large images, and may yield better compression in some cases.
 - This is the first part of the script re-write, introducing improvements in readability and the addition of debug/ geek feedback in the Verbose mode (v=0/1).
 
 **v1.0beta2 21-Sep-2009**
 - Small update release- no compression improvements.
 - Reduced the default number of Huffman block trials saving time for large images (MinBlockSize: 128 to 256bytes, LimitBlocks: 256 to 200 max). These are probably more optimal settings.
 - The color-filter trial tests less block thresholds (skip /b512), but this should not affect final compression (Huffman blocks are optimized in Trial 2) and helps improve speed.
-- Testing revealed that in rare instances the color-filter choice was not optimal when using the quicker pngout mode (/s1). The better but much slower mode is now always used (/s0). For many users the original mode would be sufficient.
-- More extensive color-filter trials with OptiPNG at 'stage24' may boost speed, as less randomized trials will be tested with pngout if OptiPNG is superior.
+- Testing revealed that in rare instances the color-filter choice was not optimal when using the quicker PNGOUT mode (/s1). The better but much slower mode is now always used (/s0). For many users the original mode would be sufficient.
+- More extensive color-filter trials with OptiPNG at 'stage24' may boost speed, as less randomized trials will be tested with PNGOUT if OptiPNG is superior.
 - Priority of Huffman trials (block number and random tables) increased from Low to Below Normal for faster processing.
-- Trial 3 updated to remove pngout best strategy (/s0) which is already tested.
+- Trial 3 updated to remove PNGOUT best strategy (/s0) which is already tested.
 - Added the minimal 256byte zlib window size to final, ultimate OptiPNG trial.
 - Tweaked compression trial 4 message to report number of trials (RandomTrials).
 - Applications have been updated and placed in a separate 'apps' folder.
@@ -136,15 +136,15 @@ Big thanks to: David Blake, counting_pine, fred01, Greg Roelofs, markcramer, Ken
 - This update shifts the emphasis further towards compression, with even less concern for speed / efficiency. More brute force trials are explored initially, to avoid hitting local minima too early and then wasting time with later trials.
 - As several changes have been implemented, this release is marked as a beta awaiting feedback from the community.
 - Renumbered the script stages ('01'>'10', etc.) for greater flexibility.
-- Simpler detection of 16bpp / unsupported images using pngout's exitcodes.
+- Simpler detection of 16bpp / unsupported images using PNGOUT's exitcodes.
 - Added 'PngOptimizer' program which sets transparent (A=0) pixels to black and often improves compression. Although this is technically a lossy process removing color data, these regions will never be seen in the PNG image.
 - It may no longer be necessary to include 'pngrewrite', but until this has been tested, I will leave the script as is.
 - More trials with some logic to determine best color and filter combination. As a result 'stage20' has been subdivided. Grayscale images should be tested first, with non productive trials skipped. Please test my processing; comments welcome!
 - Removed 'StartSize' variable and now reuse 'zs' as a general file size counter.
-- Some longer running trials (pngout) now run at low priority (start /low /b).
+- Some longer running trials (PNGOUT) now run at low priority (start /low /b).
 - Changed executable names to lowercase and removed '.exe' extension from script.
 - After compressing each image, the percentage slimmed is now reported.
-- Updated 'DeflOpt' (UPX compressed) and 'pngout' to latest versions.
+- Updated 'DeflOpt' (UPX compressed) and 'PNGOUT' to latest versions.
 - The following enhancements were suggested by 'fred01' (many thanks!):
 - Script uses set- / endlocal, so should play nicer with batch scripting.
 - If any of the bundled programs are not found, an error message is now produced.
@@ -153,10 +153,10 @@ Big thanks to: David Blake, counting_pine, fred01, Greg Roelofs, markcramer, Ken
 **v0.91 21-Aug-2007**
 - Added 'VersionText' variable for identifying customized scripts (i.e. 'Fast', 'Extreme', etc.)
 - Check added for detecting 'zlib.dll'.
-- First step of uncompressing PNG with pngout now always uses RGBA (-c6).
-- Reordered trials in 'Stage02' and added a pngout trial with some default settings. This may occasionally find better color and filter parameters, improving compression.
+- First step of uncompressing PNG with PNGOUT now always uses RGBA (-c6).
+- Reordered trials in 'Stage02' and added a PNGOUT trial with some default settings. This may occasionally find better color and filter parameters, improving compression.
 - Used UPX 3.01 (--ultra-brute) to compress the packaged software except for pngout.exe and OptiPNG.exe (it seems the originals are already compressed).
-- Updated 'readme.txt', reformatted for fixed width and included details of 'pngout' license.
+- Updated 'readme.txt', reformatted for fixed width and included details of PNGOUT license.
 
 **v0.9 09-Jul-2007**
 - Fixed missing quotes for checking if required programs are present.
