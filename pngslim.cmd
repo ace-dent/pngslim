@@ -5,23 +5,21 @@
 ::  - by Andrew C.E. Dent, dedicated to the Public Domain.
 
   set Version=(v1.2 pre-release)
-  
+
   set HuffmanTrials=15
   set RandomTableTrials=100
   set LargeFileSize=66400
   set ForceRGBA=0
-  
-  
+
+
   echo Started %date% %time% - pngslim %Version%.
   echo.
-  
   :: Check programs are available for the script
   pushd "%~dp0apps\"
   if errorlevel 1 (
     echo Directory not found.
     goto TheEnd
   )
-  
   for %%i in (
     advdef.exe
     deflopt.exe
@@ -37,23 +35,23 @@
       goto TheEnd
     )
   )
-  
+
   :: Check some files have been provided
   if "%~a1"=="" (
-    echo Drag-and-drop a selection of PNG files to optimize them.
+    echo Drag-and-drop a selection of PNG files to optimize.
     goto TheEnd
   )
-  
+
   set v=0
   :: - Verbose mode switch
-  
+
   set FileSize=0
   set FileSizeReduction=0
   set TotalBytesSaved=0
   set TotalFiles=0
   set ErrorsLogged=0
-  
-:: Count total files to process
+
+  :: Count total files to process
   for /f "tokens=*" %%i in ("%*") do (
     for %%j in (%%i) do set /a TotalFiles+=1
   )
@@ -61,13 +59,13 @@
 :SelectFile
   set /a CurrentFile+=1
   title [%CurrentFile%/%TotalFiles%] pngslim %Version%
-  
+
   :: Basic file validation
   if /I "%~x1" NEQ ".png" goto NextFile
   if %~z1 LSS 67 goto NextFile
-  
+
   echo %~z1b - Optimizing: "%~1"
-  
+
   :: Check PNG file for errors
   pngcheck.exe -q "%~1"
   if errorlevel 1 (
@@ -76,9 +74,9 @@
     echo Error detected: Skipped invalid file.
     goto NextFile
   )
-  
+
   set OriginalFileSize=%~z1
-  
+
   copy /Z "%~1" "%~1.backup" >nul
   fc.exe /B "%~1" "%~1.backup" >nul
   if errorlevel 1 (
@@ -92,7 +90,7 @@
 
   :: Losslessly reduce 16 to 8bit per channel, if possible
   optipng.exe -q -i0 -zc1 -zm8 -zs3 -f0 -force "%~1"
-  
+
   :: Strip metadata and create an uncompressed, 32bpp RGBA bitmap
   pngout.exe -q -s4 -f0 -c6 -k0 -force "%~1"
   if errorlevel 1 (
@@ -100,24 +98,24 @@
     goto RestoreFile
   )
   if %v%==1 echo %~z1b - T0S1: Written uncompressed file with stripped metadata.
-  
+
   set ImageColorMode="Undetermined"
   set ImageTransparencyMode="Undetermined"
-  
+
   set LargeFile=0
   if %~z1 GTR %LargeFileSize% set LargeFile=1
-  
+
   set /a Huff_MaxBlocks=%~z1/256
   if %Huff_MaxBlocks% GTR 512 set Huff_MaxBlocks=512
   if %v%==1 echo %~z1b - T0S2: File metrics: Max Huff blocks %Huff_MaxBlocks%, Large file: %LargeFile%.
-  
+
   :: Skip steps that modify color depth for Forced RGBA images
   if %ForceRGBA%==1 (
     echo %~z1b - Preprocessing complete ^(Saved RGBA image, stripped metadata^).
     echo %~z1b - Compression trial 1 running ^(RGBA Color and filter settings^)...
     goto T1_Step1_RGBA
   )
-  
+
   :: pngoptimizercl.exe -file:"%~1" >nul
   pngrewrite.exe "%~1" "%~1" 2>nul
   pngout.exe -q -k1 -ks -kp -f6 -s1 "%~1"
@@ -382,7 +380,7 @@
     echo %~z1b - Could not compress file further.
     goto RestoreFile
   )
-  
+
   :: Check output PNG file for errors
   pngcheck.exe -q "%~1"
   if errorlevel 1 (
@@ -391,11 +389,11 @@
     echo Error detected: Optimized file is not valid.
     goto RestoreFile
   )
-  
+
   set /a FileSize=%OriginalFileSize%-%~z1
   set /a FileSizeReduction=(%FileSize%*100)/%OriginalFileSize%
   set /a TotalBytesSaved+=%FileSize%
-  
+
   echo Optimized: "%~n1". Slimmed %FileSizeReduction%%%, %FileSize% bytes.
   del "%~1.backup"
   goto NextFile
