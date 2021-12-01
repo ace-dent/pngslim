@@ -291,46 +291,46 @@
 ::
 
   echo %~z1b - Compression trial 2 running (Deflate settings)...
-  set Huff_Blocks=1
-  set Huff_Best=1
-  set Huff_Count=0
-  set Huff_Base=%~z1
+  set TrialBlocks=1
+  set BestBlocks=1
+  set TrialCounter=0
+  set BestSize=%~z1
   if %v%==1 echo %~z1b - T2S1: Seeking optimum number of Huffman blocks...
 
 :T2_Step1_Loop
-  set /a Huff_Blocks+=1
-  pngout.exe -q -k1 -ks -kp -f6 -s3 -n%Huff_Blocks% "%~1"
-  pngout.exe -q -k1 -ks -kp -f6 -s0 -n%Huff_Blocks% "%~1"
-  if errorlevel 2 set /a Huff_Count+=1
-  if %~z1 LSS %Huff_Base% (
-    set Huff_Count=0
-    set Huff_Base=%~z1
-    set Huff_Best=%Huff_Blocks%
+  set /a TrialBlocks+=1
+  pngout.exe -q -k1 -ks -kp -f6 -s3 -n%TrialBlocks% "%~1"
+  pngout.exe -q -k1 -ks -kp -f6 -s0 -n%TrialBlocks% "%~1"
+  if errorlevel 2 set /a TrialCounter+=1
+  if %~z1 LSS %BestSize% (
+    set TrialCounter=0
+    set BestSize=%~z1
+    set BestBlocks=%TrialBlocks%
   )
-  if %v%==1 echo %~z1b - T2S1: Best %Huff_Base%b with %Huff_Best% blocks. Tested %Huff_Blocks%, Count %Huff_Count%.
-  if %Huff_Blocks% GEQ %FileMaxHuffmanBlocks% goto T2_Step2
-  if %Huff_Count% GEQ 5 goto T2_Step2
+  if %v%==1 echo %~z1b - T2S1: Best %BestSize%b with %BestBlocks% blocks. Tested %TrialBlocks%, Count %TrialCounter%.
+  if %TrialBlocks% GEQ %FileMaxHuffmanBlocks% goto T2_Step2
+  if %TrialCounter% GEQ 5 goto T2_Step2
   goto T2_Step1_Loop
 
 :T2_Step2
   if %v%==1 echo %~z1b - T2S2: Test different settings to ensure best number of blocks
-  set /a Huff_Blocks=%Huff_Best%-1
-  set Huff_Count=1
-  if %Huff_Best% LEQ 1 (
-    set Huff_Blocks=1
-    set Huff_Count=2
+  set /a TrialBlocks=%BestBlocks%-1
+  set TrialCounter=1
+  if %BestBlocks% LEQ 1 (
+    set TrialBlocks=1
+    set TrialCounter=2
   )
 
 :: Testing different Deflate strategies and random Huffman tables for optimal number of blocks
 :T2_Step2_Loop
   for /L %%i in (1,1,10) do (
     for %%j in (0,2,3) do (
-      pngout.exe -q -k1 -ks -kp -f6 -s%%j -n%Huff_Blocks% -r "%~1"
+      pngout.exe -q -k1 -ks -kp -f6 -s%%j -n%TrialBlocks% -r "%~1"
     )
   )
-  if %v%==1 echo %~z1b - T2S2: Tested %Huff_Blocks% block(s) with Deflate strategies 0,2,3.
-  set /a Huff_Blocks+=1 & set /a Huff_Count+=1
-  if %Huff_Count% GTR 3 goto T2_End
+  if %v%==1 echo %~z1b - T2S2: Tested %TrialBlocks% block(s) with Deflate strategies 0,2,3.
+  set /a TrialBlocks+=1 & set /a TrialCounter+=1
+  if %TrialCounter% GTR 3 goto T2_End
   goto T2_Step2_Loop
 
 :T2_End
