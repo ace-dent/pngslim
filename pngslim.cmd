@@ -299,7 +299,20 @@
   for /f "tokens=2 delims=n" %%i in ('pngout.exe -L "%~1"') do (
     set BestBlocks=%%i
   )
-  if %v%==1 echo %~z1b - T2S1: Initial number of Huffman blocks = %BestBlocks%.
+  if %v%==1 echo %~z1b - T2S0: Initial number of Huffman blocks = %BestBlocks%.
+  
+  :: Exit trial early for images where a single Huffman block is optimal
+  if %BestBlocks% LSS 3 (
+    pngout.exe -q -k1 -ks -kp -f6 -s3 -n3 "%~1"
+    pngout.exe -q -k1 -ks -kp -f6 -s0 -n3 "%~1"
+    for /f "tokens=2 delims=n" %%i in ('pngout.exe -L "%~1"') do (
+      set BestBlocks=%%i
+    )
+  )
+  if %BestBlocks% LEQ 1 (
+    if %v%==1 echo %~z1b - T2S0: Single Huffman block is optimal.
+    goto T2_Step2
+  )
 
   set BestSize=%~z1
 
@@ -442,3 +455,4 @@
   endlocal
   pause
   title %ComSpec%
+  
