@@ -291,11 +291,17 @@
 ::
 
   echo %~z1b - Compression trial 2 running (Deflate settings)...
-  set TrialBlocks=1
-  set BestBlocks=1
+
   set TrialCounter=0
+  set TrialBlocks=0
+  
+  set BestBlocks="Undetermined"
+  for /f "tokens=2 delims=n" %%i in ('pngout.exe -L "%~1"') do (
+    set BestBlocks=%%i
+  )
+  if %v%==1 echo %~z1b - T2S1: Initial number of Huffman blocks = %BestBlocks%.
+
   set BestSize=%~z1
-  if %v%==1 echo %~z1b - T2S1: Seeking optimum number of Huffman blocks...
 
 :T2_Step1_Loop
   set /a TrialBlocks+=1
@@ -334,6 +340,11 @@
   goto T2_Step2_Loop
 
 :T2_End
+  for /f "tokens=2 delims=n" %%i in ('pngout.exe -L "%~1"') do (
+    set BestBlocks=%%i
+  )
+  if %v%==1 echo %~z1b - T2S2: Optimal number of Huffman blocks = %BestBlocks%.
+  
   echo %~z1b - Compression trial 2 complete (Huffman blocks and Deflate strategy).
 
 
