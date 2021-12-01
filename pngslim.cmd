@@ -6,7 +6,6 @@
 
   set Version=(v1.2 pre-release)
 
-  set HuffmanTrials=15
   set RandomTableTrials=100
   set LargeFileSize=66400
   set ForceRGBA=0
@@ -310,7 +309,7 @@
   )
   if %v%==1 echo %~z1b - T2S1: Best %Huff_Base%b with %Huff_Best% blocks. Tested %Huff_Blocks%, Count %Huff_Count%.
   if %Huff_Blocks% GEQ %Huff_MaxBlocks% goto T2_Step2
-  if %Huff_Count% GEQ %HuffmanTrials% goto T2_Step2
+  if %Huff_Count% GEQ 5 goto T2_Step2
   goto T2_Step1_Loop
 
 :T2_Step2

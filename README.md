@@ -23,9 +23,7 @@ WARNING: Although this software produces fully compliant PNG images, a minority 
 
 ---
 
-For advanced users please tweak the script to your needs.
-
-- `HuffmanTrials`: When adjusting the number of Huffman blocks, the number of consecutive failed attempts to reduce file size, before quitting the trial. From testing 15 (default) works great, with higher numbers giving little benefit. For faster processing reduce to 2.
+For advanced users, please tweak the script parameters to your needs.
 
 - `RandomTableTrials` : Number of trials with randomized Huffman tables (default 100). To squeeze out a few extra bytes set to 500. For fast processing set to 1.
 
