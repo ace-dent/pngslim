@@ -104,9 +104,9 @@
   set LargeFile=0
   if %~z1 GTR %LargeFileSize% set LargeFile=1
 
-  set /a Huff_MaxBlocks=%~z1/256
-  if %Huff_MaxBlocks% GTR 512 set Huff_MaxBlocks=512
-  if %v%==1 echo %~z1b - T0S2: File metrics: Max Huff blocks %Huff_MaxBlocks%, Large file: %LargeFile%.
+  set /a FileMaxHuffmanBlocks=%~z1/256
+  if %FileMaxHuffmanBlocks% GTR 1024 set FileMaxHuffmanBlocks=1024
+  if %v%==1 echo %~z1b - T0S2: File metrics: Max Huff blocks %FileMaxHuffmanBlocks%, Large file: %LargeFile%.
 
   :: Skip steps that modify color depth for Forced RGBA images
   if %ForceRGBA%==1 (
@@ -308,7 +308,7 @@
     set Huff_Best=%Huff_Blocks%
   )
   if %v%==1 echo %~z1b - T2S1: Best %Huff_Base%b with %Huff_Best% blocks. Tested %Huff_Blocks%, Count %Huff_Count%.
-  if %Huff_Blocks% GEQ %Huff_MaxBlocks% goto T2_Step2
+  if %Huff_Blocks% GEQ %FileMaxHuffmanBlocks% goto T2_Step2
   if %Huff_Count% GEQ 5 goto T2_Step2
   goto T2_Step1_Loop
 
