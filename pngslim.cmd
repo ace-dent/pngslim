@@ -13,12 +13,14 @@
 
   echo Started %date% %time% - pngslim %Version%.
   echo.
+
   :: Check programs are available for the script
   pushd "%~dp0apps\"
   if errorlevel 1 (
     echo Directory not found.
     goto TheEnd
   )
+
   for %%i in (
     advdef.exe
     deflopt.exe
@@ -106,7 +108,8 @@
 
   set /a FileMaxHuffmanBlocks=%~z1/256
   if %FileMaxHuffmanBlocks% GTR 1024 set FileMaxHuffmanBlocks=1024
-  if %v%==1 echo %~z1b - T0S2: File metrics: Max Huff blocks %FileMaxHuffmanBlocks%, Large file: %LargeFile%.
+  if %v%==1 echo %~z1b - T0S2: File metrics: Max Huffman blocks = %FileMaxHuffmanBlocks%, Large file = %LargeFile%.
+
 
   :: Skip steps that modify color depth for Forced RGBA images
   if %ForceRGBA%==1 (
@@ -292,15 +295,13 @@
 
   echo %~z1b - Compression trial 2 running (Deflate settings)...
 
-  set TrialCounter=0
-  set TrialBlocks=0
-  
   set BestBlocks="Undetermined"
   for /f "tokens=2 delims=n" %%i in ('pngout.exe -L "%~1"') do (
     set BestBlocks=%%i
   )
   if %v%==1 echo %~z1b - T2S0: Initial number of Huffman blocks = %BestBlocks%.
-  
+
+
   :: Exit trial early for images where a single Huffman block is optimal
   if %BestBlocks% LSS 3 (
     pngout.exe -q -k1 -ks -kp -f6 -s3 -n3 "%~1"
@@ -314,22 +315,40 @@
     goto T2_Step2
   )
 
+
+:: Step 1 - Coarse scan for optimal number of Huffman blocks
   set BestSize=%~z1
+  set TrialCounter=0
+  set TrialBlocks=4
 
 :T2_Step1_Loop
-  set /a TrialBlocks+=1
   pngout.exe -q -k1 -ks -kp -f6 -s3 -n%TrialBlocks% "%~1"
   pngout.exe -q -k1 -ks -kp -f6 -s0 -n%TrialBlocks% "%~1"
-  if errorlevel 2 set /a TrialCounter+=1
+
   if %~z1 LSS %BestSize% (
-    set TrialCounter=0
+    set TrialCounter=1
     set BestSize=%~z1
     set BestBlocks=%TrialBlocks%
+  ) else (
+    set /a TrialCounter+=1
   )
-  if %v%==1 echo %~z1b - T2S1: Best %BestSize%b with %BestBlocks% blocks. Tested %TrialBlocks%, Count %TrialCounter%.
-  if %TrialBlocks% GEQ %FileMaxHuffmanBlocks% goto T2_Step2
-  if %TrialCounter% GEQ 5 goto T2_Step2
+  if %v%==1 echo %~z1b - T2S1: Tested: %TrialBlocks% blocks (try %TrialCounter%/5). Best: %BestBlocks% blocks.
+  if %TrialCounter% GEQ 5 goto T2_Step1_End
+  if %TrialBlocks% GEQ %FileMaxHuffmanBlocks% goto T2_Step1_End
+  set /a TrialBlocks+=2
   goto T2_Step1_Loop
+
+:T2_Step1_End
+  :: Check whether a larger number of blocks is better and re-run Step 1 if required
+  set /a TrialDifference=%BestBlocks%-%TrialBlocks%-1
+  if %TrialDifference% GTR 8 set TrialDifference=8
+  if %BestBlocks% GTR %TrialBlocks% (
+    set TrialCounter=0
+    set /a TrialBlocks=%BestBlocks%-%TrialDifference%
+    if %v%==1 echo %~z1b - T2S1: Extended trial- restarting Step 1 with more blocks.
+    goto T2_Step1_Loop
+  )
+
 
 :T2_Step2
   if %v%==1 echo %~z1b - T2S2: Test different settings to ensure best number of blocks
