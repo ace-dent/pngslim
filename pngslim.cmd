@@ -350,33 +350,44 @@
   )
 
 
+:: Step 2 - Refined scan around the optimized number of Huffman blocks
 :T2_Step2
-  if %v%==1 echo %~z1b - T2S2: Test different settings to ensure best number of blocks
-  set /a TrialBlocks=%BestBlocks%-1
-  set TrialCounter=1
+  if %v%==1 echo %~z1b - T2S2: Testing settings to ensure optimum number of blocks
+
   if %BestBlocks% LEQ 1 (
     set TrialBlocks=1
     set TrialCounter=2
+  ) else (
+    set /a TrialBlocks=%BestBlocks%-1
+    set TrialCounter=1
   )
 
-:: Testing different Deflate strategies and random Huffman tables for optimal number of blocks
 :T2_Step2_Loop
-  for /L %%i in (1,1,10) do (
-    for %%j in (0,2,3) do (
-      pngout.exe -q -k1 -ks -kp -f6 -s%%j -n%TrialBlocks% -r "%~1"
+  pngout.exe -q -k1 -ks -f6 -s3 -n%TrialBlocks% "%~1"
+  pngout.exe -q -k1 -ks -f6 -s0 -n%TrialBlocks% "%~1"
+  pngout.exe -q -k1 -ks -f6 -s2 -n%TrialBlocks% "%~1"
+
+  :: Test random Huffman tables (x10) for small files
+  if %LargeFile%==0 (
+    for /L %%i in (1,1,10) do (
+      pngout.exe -q -k1 -ks -f6 -s3 -n%TrialBlocks% -r "%~1"
+      pngout.exe -q -k1 -ks -f6 -s0 -n%TrialBlocks% -r "%~1"
+      pngout.exe -q -k1 -ks -f6 -s2 -n%TrialBlocks% -r "%~1"
     )
   )
-  if %v%==1 echo %~z1b - T2S2: Tested %TrialBlocks% block(s) with Deflate strategies 0,2,3.
-  set /a TrialBlocks+=1 & set /a TrialCounter+=1
+  if %v%==1 echo %~z1b - T2S2: Tested %TrialBlocks% block(s) with pngout strategies 0,2,3.
+  set /a TrialBlocks+=1
+  set /a TrialCounter+=1
   if %TrialCounter% GTR 3 goto T2_End
   goto T2_Step2_Loop
+
 
 :T2_End
   for /f "tokens=2 delims=n" %%i in ('pngout.exe -L "%~1"') do (
     set BestBlocks=%%i
   )
   if %v%==1 echo %~z1b - T2S2: Optimal number of Huffman blocks = %BestBlocks%.
-  
+
   echo %~z1b - Compression trial 2 complete (Huffman blocks and Deflate strategy).
 
 
