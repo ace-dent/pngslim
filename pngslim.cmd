@@ -10,6 +10,9 @@
   set LargeFileSize=66400
   set ForceRGBA=0
 
+  set debug="NUL"
+  :: - Verbose output: NUL (none) / CON (console display)
+  
 
   echo Started %date% %time% - pngslim %Version%.
   echo.
@@ -42,9 +45,6 @@
     echo Drag-and-drop a selection of PNG files to optimize.
     goto TheEnd
   )
-
-  set v=0
-  :: - Verbose mode switch
 
   set FileSize=0
   set FileSizeReduction=0
@@ -98,7 +98,7 @@
     echo Cannot compress: Unsupported PNG format.
     goto RestoreFile
   )
-  if %v%==1 echo %~z1b - T0S1: Written uncompressed file with stripped metadata.
+  >%debug% echo %~z1b - T0S1: Written uncompressed file with stripped metadata.
 
   set ImageColorMode="Undetermined"
   set ImageTransparencyMode="Undetermined"
@@ -108,7 +108,7 @@
 
   set /a FileMaxHuffmanBlocks=%~z1/256
   if %FileMaxHuffmanBlocks% GTR 1024 set FileMaxHuffmanBlocks=1024
-  if %v%==1 echo %~z1b - T0S2: File metrics: Max Huffman blocks = %FileMaxHuffmanBlocks%, Large file = %LargeFile%.
+  >%debug% echo %~z1b - T0S2: File metrics: Max Huffman blocks = %FileMaxHuffmanBlocks%, Large file = %LargeFile%.
 
 
   :: Skip steps that modify color depth for Forced RGBA images
@@ -152,7 +152,7 @@
       )
     )
   )
-  if %v%==1 echo %~z1b - T1S1: Tested color setting -c0 (Gray).
+  >%debug% echo %~z1b - T1S1: Tested color setting -c0 (Gray).
 
 
 :T1_Step1_Gray+Alpha
@@ -176,7 +176,7 @@
       )
     )
   )
-  if %v%==1 echo %~z1b - T1S1: Tested color setting -c4 (Gray+Alpha).
+  >%debug% echo %~z1b - T1S1: Tested color setting -c4 (Gray+Alpha).
 
 
 :T1_Step1_Paletted
@@ -201,7 +201,7 @@
       )
     )
   )
-  if %v%==1 echo %~z1b - T1S1: Tested color setting -c3 (Paletted).
+  >%debug% echo %~z1b - T1S1: Tested color setting -c3 (Paletted).
 
 
 :T1_Step1_RGB
@@ -228,7 +228,7 @@
       )
     )
   )
-  if %v%==1 echo %~z1b - T1S1: Tested color setting -c2 (RGB).
+  >%debug% echo %~z1b - T1S1: Tested color setting -c2 (RGB).
 
 
 :T1_Step1_RGBA
@@ -256,11 +256,11 @@
       )
     )
   )
-  if %v%==1 echo %~z1b - T1S1: Tested color setting -c6 (RGB+Alpha).
+  >%debug% echo %~z1b - T1S1: Tested color setting -c6 (RGB+Alpha).
 
 
 :T1_Step2
-  if %v%==1 echo %~z1b - T1S2: Testing Delta filters for chosen color type...
+  >%debug% echo %~z1b - T1S2: Testing Delta filters for chosen color type...
   if %LargeFile%==0 (
     for %%i in (0,3) do (
       for /L %%j in (0,1,5) do (
@@ -299,7 +299,7 @@
   for /f "tokens=2 delims=n" %%i in ('pngout.exe -L "%~1"') do (
     set BestBlocks=%%i
   )
-  if %v%==1 echo %~z1b - T2S0: Initial number of Huffman blocks = %BestBlocks%.
+  >%debug% echo %~z1b - T2S0: Initial number of Huffman blocks = %BestBlocks%.
 
 
   :: Exit trial early for images where a single Huffman block is optimal
@@ -311,7 +311,7 @@
     )
   )
   if %BestBlocks% LEQ 1 (
-    if %v%==1 echo %~z1b - T2S0: Single Huffman block is optimal.
+    >%debug% echo %~z1b - T2S0: Single Huffman block is optimal.
     goto T2_Step2
   )
 
@@ -332,7 +332,7 @@
   ) else (
     set /a TrialCounter+=1
   )
-  if %v%==1 echo %~z1b - T2S1: Tested: %TrialBlocks% blocks (try %TrialCounter%/5). Best: %BestBlocks% blocks.
+  >%debug% echo %~z1b - T2S1: Tested: %TrialBlocks% blocks (try %TrialCounter%/5). Best: %BestBlocks% blocks.
   if %TrialCounter% GEQ 5 goto T2_Step1_End
   if %TrialBlocks% GEQ %FileMaxHuffmanBlocks% goto T2_Step1_End
   set /a TrialBlocks+=2
@@ -345,14 +345,14 @@
   if %BestBlocks% GTR %TrialBlocks% (
     set TrialCounter=0
     set /a TrialBlocks=%BestBlocks%-%TrialDifference%
-    if %v%==1 echo %~z1b - T2S1: Extended trial- restarting Step 1 with more blocks.
+    >%debug% echo %~z1b - T2S1: Extended trial- restarting Step 1 with more blocks.
     goto T2_Step1_Loop
   )
 
 
 :: Step 2 - Refined scan around the optimized number of Huffman blocks
 :T2_Step2
-  if %v%==1 echo %~z1b - T2S2: Testing settings to ensure optimum number of blocks
+  >%debug% echo %~z1b - T2S2: Testing settings to ensure optimum number of blocks
 
   if %BestBlocks% LEQ 1 (
     set TrialBlocks=1
@@ -375,7 +375,7 @@
       pngout.exe -q -k1 -ks -f6 -s2 -n%TrialBlocks% -r "%~1"
     )
   )
-  if %v%==1 echo %~z1b - T2S2: Tested %TrialBlocks% block(s) with pngout strategies 0,2,3.
+  >%debug% echo %~z1b - T2S2: Tested %TrialBlocks% block(s) with pngout strategies 0,2,3.
   set /a TrialBlocks+=1
   set /a TrialCounter+=1
   if %TrialCounter% GTR 3 goto T2_End
@@ -386,7 +386,7 @@
   for /f "tokens=2 delims=n" %%i in ('pngout.exe -L "%~1"') do (
     set BestBlocks=%%i
   )
-  if %v%==1 echo %~z1b - T2S2: Optimal number of Huffman blocks = %BestBlocks%.
+  >%debug% echo %~z1b - T2S2: Optimal number of Huffman blocks = %BestBlocks%.
 
   echo %~z1b - Compression trial 2 complete (Huffman blocks and Deflate strategy).
 
@@ -422,6 +422,17 @@
 
 
 :PostprocessFile
+
+  :: Processed files, expanded above a threshold size, are copied for debugging
+  set /a FailSize=((%OriginalFileSize%*1001)/1000)+2
+  if %debug%=="CON" (
+    echo  Original size: %OriginalFileSize%b. 
+    echo  Failure size: %FailSize%b. Margin = 0.1%% + 2 bytes.
+    if %~z1 GTR %FailSize% (
+      copy %1 %1._fail >nul
+      echo  Processed size: %~z1b. Larger file copied for debugging. 
+    )
+  )
 
   :: Basic output file validation
   if %~z1 LSS 67 (
