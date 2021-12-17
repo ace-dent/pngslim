@@ -304,8 +304,8 @@
 
   :: Exit trial early for images where a single Huffman block is optimal
   if %BestBlocks% LSS 3 (
-    pngout.exe -q -k1 -ks -kp -f6 -s3 -n3 "%~1"
     pngout.exe -q -k1 -ks -kp -f6 -s0 -n3 "%~1"
+    pngout.exe -q -k1 -ks -kp -f6 -s3 -n3 "%~1"
     for /f "tokens=2 delims=n" %%i in ('pngout.exe -L "%~1"') do (
       set BestBlocks=%%i
     )
@@ -322,8 +322,8 @@
   set TrialBlocks=4
 
 :T2_Step1_Loop
-  pngout.exe -q -k1 -ks -kp -f6 -s3 -n%TrialBlocks% "%~1"
   pngout.exe -q -k1 -ks -kp -f6 -s0 -n%TrialBlocks% "%~1"
+  pngout.exe -q -k1 -ks -kp -f6 -s3 -n%TrialBlocks% "%~1"
 
   if %~z1 LSS %BestSize% (
     set TrialCounter=1
@@ -363,16 +363,13 @@
   )
 
 :T2_Step2_Loop
-  pngout.exe -q -k1 -ks -f6 -s3 -n%TrialBlocks% "%~1"
-  pngout.exe -q -k1 -ks -f6 -s0 -n%TrialBlocks% "%~1"
-  pngout.exe -q -k1 -ks -f6 -s2 -n%TrialBlocks% "%~1"
-
-  :: Test random Huffman tables (x10) for small files
-  if %LargeFile%==0 (
-    for /L %%i in (1,1,10) do (
-      pngout.exe -q -k1 -ks -f6 -s3 -n%TrialBlocks% -r "%~1"
-      pngout.exe -q -k1 -ks -f6 -s0 -n%TrialBlocks% -r "%~1"
-      pngout.exe -q -k1 -ks -f6 -s2 -n%TrialBlocks% -r "%~1"
+  for %%s in (0,2,3) do (
+    pngout.exe -q -k1 -ks -f6 -s%%s -n%TrialBlocks% "%~1"
+    :: Test random Huffman tables (x10) for small files
+    if %LargeFile%==0 (
+      for /L %%i in (1,1,10) do (
+        pngout.exe -q -k1 -ks -f6 -s%%s -n%TrialBlocks% -r "%~1"
+      )
     )
   )
   >%debug% echo %~z1b - T2S2: Tested %TrialBlocks% block(s) with pngout strategies 0,2,3.
