@@ -4,7 +4,7 @@
 # pngslim 
  _– when every byte counts!_
 
-Andrew C.E. Dent, 2021.
+Andrew C.E. Dent, 2022.
 
 
 Batch optimization of PNG images for MS Windows, using multiple tools to achieve the smallest file size, with scant regard for time.
@@ -86,11 +86,11 @@ Big thanks to: David Blake, counting_pine, fred01, markcramer, Greg Roelofs, Ken
 
 ## History
 
-**v1.2 Development 2021** 
+**v1.2 Development 2022** 
 - Improved Trial (2) - optimizing number of Huffman blocks and PNGOUT Deflate strategy. Trial is smarter, faster and may improve compression for large images. Removed `HuffmanTrials` parameter (now unnecessary) and increased maximum number of blocks from 512 to 1024. Trial is skipped early, for files well optimised with a single block.
 - Added PNGOUT parameters for efficiency and correctness: use `-kp` to avoid palette trials and `-f6` to avoid filter trials, where possible.
 - Changed OptiPNG parameters `−nb −nc −np` to the more compact `-nx`, when disabling all lossless image reductions.
-- Improved script readability: indents changed from tabs to spaces(!);  removed use of `start /belownormal` to run PNGOUT; removed inline comments; made verbose output clearer.
+- Improved script readability: indents changed from tabs to spaces(!);  removed use of `start /belownormal` to run PNGOUT; removed inline comments; made verbose output (log) clearer.
 - Reformatted 'README' for markdown and tweaked text.
 
 **v1.1 12-Sep-2021**
@@ -102,8 +102,7 @@ Big thanks to: David Blake, counting_pine, fred01, markcramer, Greg Roelofs, Ken
 - Fixed up typos and small details in Readme.
 - Bundled programs will no longer be UPX compressed. The space saving is not necessary and provides a minor speed up. Programs' license information added.
 - Added 'pngcheck.exe' program v3.0.3 (25-Apr-2021) for file validation.
-- Updated 'OptiPNG.exe' to v0.7.7 (was v0.6.3). Unpacked the distributed file,
-  removing UPX compression. Various vulnerability fixes; Upgrades libpng and zlib; Adds options -nx, -strip, -clobber, -debug; Changes the activity display output from STDOUT to STDERR.
+- Updated 'OptiPNG.exe' to v0.7.7 (was v0.6.3). Unpacked the distributed file, removing UPX compression. Various vulnerability fixes; Upgrades libpng and zlib; Adds options -nx, -strip, -clobber, -debug; Changes the activity display output from STDOUT to STDERR.
 - Updated 'pngrewrite.exe' to version 1.4.0 (was 1.3.0). Maintenance release.
 - Updated 'pngout.exe' to 13-Feb-2015 release (was 22-Sep-2009). This gives better randomness when the -r switch is used; Fixes -f5 to generate block boundaries in a consistent and correct manner; Adds -f6 option to reuse filters line-by-line from a source PNG file. 
 
