@@ -502,5 +502,5 @@
   popd
   endlocal
   pause
-  title %ComSpec%
-  
+  title %comspec%
+  goto:eof
