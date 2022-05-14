@@ -1,8 +1,9 @@
-# OS files #
-._*
-.DS_Store
-.Spotlight-V100
-.Trashes
+### Windows ###
 Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
 
-# Project files #
+### macOS ###
+.DS_Store
+._*
