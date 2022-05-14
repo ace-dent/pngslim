@@ -27,6 +27,7 @@
   for %%i in (
     advdef.exe
     deflopt.exe
+    huffmix.exe
     optipng.exe
     pngcheck.exe
     pngoptimizercl.exe

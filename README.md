@@ -56,6 +56,9 @@ Please read the comments under the 'Legal' section of this readme.
 - DeflOpt v2.07 (05-Sep-2007) by Ben Jos Walbeehm. <br>
    http://web.archive.org/web/20131208161446/http://www.walbeehm.com/download/index.html
 
+- Huffmix v0.6b2 (06-May-2014) by Frédéric Kayser. <br>
+   https://encode.su/threads/1313-Huffmix-a-PNGOUT-r-catalyst
+
 - OptiPNG v0.7.7 (27-Dec-2017) by Cosmin Truta. <br>
    http://optipng.sourceforge.net/
 
@@ -92,6 +95,7 @@ Big thanks to: David Blake, counting_pine, fred01, markcramer, Greg Roelofs, Ken
 - Changed OptiPNG parameters `−nb −nc −np` to the more compact `-nx`, when disabling all lossless image reductions.
 - Improved script readability: indents changed from tabs to spaces(!);  removed use of `start /belownormal` to run PNGOUT; removed inline comments; made verbose output (log) clearer.
 - Reformatted 'README' for markdown and tweaked text.
+- Added 'huffmix.exe' program v0.6b2 (06-May-2014). It selects the smallest Huffman blocks from two related files and combines them into a new file.
 
 **v1.1 12-Sep-2021**
 - Added an early trial with OptiPNG, to losslessly reduce 16 to 8 bit per channel. True 16bpc files are still rejected as 'unsupported'.
