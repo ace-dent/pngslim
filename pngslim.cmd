@@ -60,7 +60,8 @@
 
 :SelectFile
   set /a CurrentFile+=1
-  title [%CurrentFile%/%TotalFiles%] pngslim %Version%
+  set Status=[%CurrentFile%/%TotalFiles%] pngslim %Version%
+  title %Status%
 
   :: Basic file validation
   if /I "%~x1" NEQ ".png" goto NextFile
