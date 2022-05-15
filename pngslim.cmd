@@ -114,7 +114,7 @@
 
 
   :: Skip steps that modify color depth for Forced RGBA images
-  if %ForceRGBA%==1 (
+  if %ForceRGBA% EQU 1 (
     echo %~z1b - Preprocessing complete ^(Saved RGBA image, stripped metadata^).
     echo %~z1b - Compression trial 1 running ^(RGBA Color and filter settings^)...
     goto T1_Step1_RGBA
@@ -139,14 +139,14 @@
   set ImageColorMode="Gray"
   set ImageTransparencyMode="Basic"
   for %%i in (1,2,4,8) do (
-    if %LargeFile%==0 (
+    if %LargeFile% EQU 0 (
       for %%j in (1,2) do (
         for /L %%k in (0,1,5) do ( 
           pngout.exe -q -k1 -s0 -d%%i -n%%j -f%%k -c0 "%~1"
         )
       )
     )
-    if %LargeFile%==1 (
+    if %LargeFile% EQU 1 (
       for %%j in (0,256) do (
         for %%k in (0,5) do (
           pngout.exe -q -k1 -s1 -d%%i -b%%j -f%%k -c0 "%~1"
@@ -164,14 +164,14 @@
   if %ImageTransparencyMode% NEQ "Basic" (
     set ImageTransparencyMode="Multiple" 
   )
-  if %LargeFile%==0 (
+  if %LargeFile% EQU 0 (
     for %%i in (1,2) do (
       for /L %%j in (0,1,5) do (
         pngout.exe -q -k1 -s0 -n%%i -f%%j -c4 "%~1"
       )
     )
   )
-  if %LargeFile%==1 (
+  if %LargeFile% EQU 1 (
     for %%i in (0,256) do (
       for %%j in (0,5) do (
         pngout.exe -q -k1 -s1 -b%%i -f%%j -c4 "%~1"
@@ -188,14 +188,14 @@
     set ImageColorMode="Paletted" 
   )
   for %%i in (1,2,4,8) do (
-    if %LargeFile%==0 (
+    if %LargeFile% EQU 0 (
       for %%j in (1,2) do (
         for /L %%k in (0,1,5) do (
           pngout.exe -q -k1 -s0 -d%%i -n%%j -f%%k -c3 "%~1"
         )
       )
     )
-    if %LargeFile%==1 (
+    if %LargeFile% EQU 1 (
       for %%j in (0,256) do (
         for %%k in (0,5) do (
           pngout.exe -q -k1 -s1 -d%%i -b%%j -f%%k -c3 "%~1"
@@ -216,14 +216,14 @@
     )
   )
   set ImageTransparencyMode="Basic"
-  if %LargeFile%==0 (
+  if %LargeFile% EQU 0 (
     for %%i in (1,2) do (
       for /L %%j in (0,1,5) do (
         pngout.exe -q -k1 -s0 -n%%i -f%%j -c2 "%~1"
       )
     )
   )
-  if %LargeFile%==1 (
+  if %LargeFile% EQU 1 (
     for %%i in (0,256) do (
       for %%j in (0,5) do (
         pngout.exe -q -k1 -s1 -b%%i -f%%j -c2 "%~1"
@@ -244,14 +244,14 @@
       set ImageTransparencyMode="Multiple" 
     )
   )
-  if %LargeFile%==0 (
+  if %LargeFile% EQU 0 (
     for %%i in (1,2) do (
       for /L %%j in (0,1,5) do (
         pngout.exe -q -k1 -s0 -n%%i -f%%j -c6 "%~1"
       )
     )
   )
-  if %LargeFile%==1 (
+  if %LargeFile% EQU 1 (
     for %%i in (0,256) do (
       for %%j in (0,5) do (
         pngout.exe -q -k1 -s1 -b%%i -f%%j -c6 "%~1"
@@ -263,7 +263,7 @@
 
 :T1_Step2
   >>%log% echo %~z1b - T1S2 Testing Delta filters for chosen color type...
-  if %LargeFile%==0 (
+  if %LargeFile% EQU 0 (
     for %%i in (0,3) do (
       for /L %%j in (0,1,5) do (
         pngout.exe -q -k1 -ks -kp -s%%i -b256 -f%%j "%~1"
@@ -272,7 +272,7 @@
     optipng.exe -q -nx -zc1-9 -zm8-9 -zs0-3 -f0-5 "%~1"
     if %ForceRGBA% NEQ 1 optipng.exe -q -zc1-9 -zm8-9 -zs0-3 -f0-5 "%~1"
   )
-  if %LargeFile%==1 (
+  if %LargeFile% EQU 1 (
     for %%i in (0,256) do (
       for /L %%j in (1,1,4) do (
         pngout.exe -q -k1 -ks -kp -s1 -b%%i -f%%j "%~1"
@@ -368,7 +368,7 @@
   for %%s in (0,2,3) do (
     pngout.exe -q -k1 -ks -f6 -s%%s -n%TrialBlocks% "%~1"
     :: Test random Huffman tables (x10) for small files
-    if %LargeFile%==0 (
+    if %LargeFile% EQU 0 (
       for /L %%i in (1,1,10) do (
         pngout.exe -q -k1 -ks -f6 -s%%s -n%TrialBlocks% -r "%~1"
       )
