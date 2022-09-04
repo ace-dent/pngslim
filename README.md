@@ -36,12 +36,9 @@ For advanced users, please tweak the script parameters to your needs.
 ## Legal
 
 The software ('pngslim' script) is provided 'as-is', without any express or implied warranty. In no event will the author be held liable for any damages arising from the use of this software. Permission is granted to anyone to use this software for any purpose, including commercial applications, and to alter
-it and redistribute it freely*. The software is dedicated to the Public Domain.
+it and redistribute it freely. The software is dedicated to the Public Domain.
 
 The additional software included in the 'pngslim' package ('apps') is provided for convenience. The additional software is the property of other authors and may be subject to different licensing and legal conditions. Please check the original authors' websites for details and latest information.
-
-\* The license for PNGOUT restricts how the software may be distributed:
-http://www.advsys.net/ken/utils.htm#pngoutkziplicense . Its inclusion is by kind permission of Ken Silverman and David Blake. Therefore, you may not redistribute the pngslim package with 'pngout.exe' without prior arrangement.
 
 
 
@@ -90,12 +87,13 @@ Big thanks to: David Blake, counting_pine, fred01, markcramer, Greg Roelofs, Ken
 ## History
 
 **v1.2 Development 2022** 
-- Improved Trial (2) - optimizing number of Huffman blocks and PNGOUT Deflate strategy. Trial is smarter, faster and may improve compression for large images. Removed `HuffmanTrials` parameter (now unnecessary) and increased maximum number of blocks from 512 to 1024. Trial is skipped early, for files well optimised with a single block.
+- Improved Trial (2) - optimizing number of Huffman blocks and PNGOUT Deflate strategy. Trial is smarter, faster and may improve compression for large images. Removed `HuffmanTrials` parameter (now unnecessary) and increased maximum number of blocks from 512 to 1024. Trial is skipped early for files well optimized with a single block.
 - Added PNGOUT parameters for efficiency and correctness: use `-kp` to avoid palette trials and `-f6` to avoid filter trials, where possible.
 - Changed OptiPNG parameters `−nb −nc −np` to the more compact `-nx`, when disabling all lossless image reductions.
 - Improved script readability: indents changed from tabs to spaces(!);  removed use of `start /belownormal` to run PNGOUT; removed inline comments; made verbose output (log) clearer.
 - Reformatted 'README' for markdown and tweaked text.
 - Added 'huffmix.exe' program v0.6b2 (06-May-2014). It selects the smallest Huffman blocks from two related files and combines them into a new file.
+- Updated PNGOUT license.
 
 **v1.1 12-Sep-2021**
 - Added an early trial with OptiPNG, to losslessly reduce 16 to 8 bit per channel. True 16bpc files are still rejected as 'unsupported'.

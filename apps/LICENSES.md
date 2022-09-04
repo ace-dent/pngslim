@@ -62,22 +62,15 @@ https://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 
 # PNGOUT - LICENSE
 http://www.advsys.net/ken/utils.htm#pngoutkziplicense
-(Accessed 30-Dec-2019)
+(Accessed 10-Jul-2021)
 
-I have gotten a lot of requests recently about bundling the command line 
-executables, or releasing the source code to KZIP and PNGOUT. Obviously, 
-this is very flattering. : ) In general, I am open to this kind of stuff, 
-however for these I must be a little protective, as the algorithms are 
-incorporated into a commercial product. KZIP and PNGOUT share a lot of code 
-in common, and I am currently selling GUI versions of PNGOUT at ardfry.com. 
-So here is the license:
+I have gotten a lot of requests about bundling the command line executables, or releasing the source code to KZIP and PNGOUT. This is my license (updated 01/16/2021):
 
-- The command line versions of PNGOUT.EXE and KZIP.EXE are free, as are the Mac and Linux ports. You may use PNGOUT- or KZIP-compressed content for non-commercial or commercial purposes.
-- Redistributing, repackaging, or reusing the PNGOUT or KZIP executable is 
-prohibited without the express consent of Ardfry Imaging, LLC, and a formal 
-business agreement.
-
-For business requests (such as bundling), please write directly to my business partner, David Blake [http://www.ardfry.com/Contact.html]. He will be able to answer your question much better than I can.
+- The command line versions of PNGOUT.EXE and KZIP.EXE are free for use, as are the Mac and Linux ports.
+- You may use PNGOUT- or KZIP-compressed content for non-commercial or commercial purposes.
+- Redistributing, repackaging, or reusing the PNGOUT or KZIP executable is permitted for non-commercial projects that are distributed freely.
+- For commercial requests (such as bundling with a commercial product), please write to my business partner, David Blake.
+- When bundling, my credit (both my name and website) must be clearly displayed in some reasonable fashion that can be seen by an average user.
 
 
 
