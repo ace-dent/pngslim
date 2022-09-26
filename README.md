@@ -2,15 +2,17 @@
 
 
 # pngslim 
- _– when every byte counts!_
 
-Andrew C.E. Dent, 2022.
+&emsp;&emsp; _– when every byte counts!_ 
 
+<br>
 
-Batch optimization of PNG images for MS Windows, using multiple tools to achieve the smallest file size, with scant regard for time.
+Batch optimization of PNG images for MS Windows, using multiple tools to achieve the smallest file size, with scant regard for time. 
+Produced by Andrew C.E. Dent, 2022.
 
 WARNING: Although this software produces fully compliant PNG images, a minority of image editors and viewers contain bugs which may cause problems displaying these optimized images.
 
+<br>
 
 
 ## Usage
@@ -35,8 +37,7 @@ For advanced users, please tweak the script parameters to your needs.
 
 ## Legal
 
-The software ('pngslim' script) is provided 'as-is', without any express or implied warranty. In no event will the author be held liable for any damages arising from the use of this software. Permission is granted to anyone to use this software for any purpose, including commercial applications, and to alter
-it and redistribute it freely. The software is dedicated to the Public Domain.
+The software ('pngslim' script) is provided 'as-is', without any express or implied warranty. In no event will the author be held liable for any damages arising from the use of this software. Permission is granted to anyone to use this software for any purpose, including commercial applications, and to alter it and redistribute it freely. The software is dedicated to the Public Domain.
 
 The additional software included in the 'pngslim' package ('apps') is provided for convenience. The additional software is the property of other authors and may be subject to different licensing and legal conditions. Please check the original authors' websites for details and latest information.
 
