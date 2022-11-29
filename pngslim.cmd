@@ -54,9 +54,7 @@
   set ErrorsLogged=0
 
   :: Count total files to process
-  for /f "tokens=*" %%i in ("%*") do (
-    for %%j in (%%i) do set /a TotalFiles+=1
-  )
+  for %%i in (%*) do set /a TotalFiles+=1
 
 :SelectFile
   set /a CurrentFile+=1
