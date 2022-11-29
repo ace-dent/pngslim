@@ -5,11 +5,11 @@
 ::  - by Andrew C.E. Dent, dedicated to the Public Domain.
 
   set Version=(v1.2 pre-release)
-
-  set RandomTableTrials=100
-  set LargeFileSize=66400
+ 
   set ForceRGBA=0
-  
+  set ReduceDiskWrites=1
+  set LargeFileSize=66400
+
   :: Log verbose output: NUL (none) / CON (console display)
   set log="NUL"
 
@@ -393,6 +393,7 @@
 :: Trial (3) - Test randomized Huffman tables
 ::
 
+  set RandomTableTrials=100
 :T3_Step1_Loop
   set FileSize=%~z1
   echo %~z1b - Compression trial 3 running (%RandomTableTrials%x random Huffman tables)...
