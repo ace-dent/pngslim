@@ -2,16 +2,10 @@
 
 
 # pngslim 
-
-&emsp;&emsp; _– when every byte counts!_ 
-
-<br>
+&emsp;&emsp; – _when every byte counts!_  
 
 Batch optimization of PNG images for MS Windows, using multiple tools to achieve the smallest file size, with scant regard for time. 
-Produced by Andrew C.E. Dent, 2022.
-
-WARNING: Although this software produces fully compliant PNG images, a minority of image editors and viewers contain bugs which may cause problems displaying these optimized images.
-
+Produced by Andrew C.E. Dent, 2022.  
 <br>
 
 
@@ -21,18 +15,29 @@ WARNING: Although this software produces fully compliant PNG images, a minority 
 2. Drag & drop* your PNG files on `pngslim.cmd` to run.
 3. Have fun slimming away those surplus bytes! :-)
 
-\* Note : Due to limitations of MS Windows, the maximum number of files that you can drag & drop depends on the total text length of the image file paths+names. If the script doesn't run or you see the following error message : "Windows cannot access the specified device, path, or file...", you should reduce the number of selected files (typically <100), and consider moving your files to shorten the path names (e.g. "C:\png\").
+\* Note : Due to limitations of MS Windows, the maximum number of files that you can drag & drop depends on the total text length of the image file paths+names. If the script doesn't run or you see the following error message : "Windows cannot access the specified device, path, or file...", you should reduce the number of selected files (typically <100), and consider moving your files to shorten the path names (e.g. "C:\png\").  
 
----
 
-For advanced users, please tweak the script parameters to your needs.
+### Script parameters
+By default the script parameters are highly tuned for the majority of use cases but advanced users may wish to tweak them.
 
-- `RandomTableTrials` : Number of trials with randomized Huffman tables (default 100). To squeeze out a few extra bytes set to 500. For fast processing set to 1.
+- `ForceRGBA` : [0/1] will rewrite the image as an RGBA image (32 bits per pixel) and then only optimize in that color mode, or restore the original if not compressed. This limits the possible compression methods and may generate an unnecessary alpha channel, so is *not* recommended (default is off, 0).  
 
-- `LargeFileSize` : The uncompressed file size in bytes that determines a small/ large image and adjusts processing effort accordingly. The default 66400 bytes corresponds to an image larger than 128 x 128 pixels. 
+- `ReduceDiskWrites` : [0/1] Avoid writing files to disk when possible, to reduce wear on the drive (default is on, 1). This may slightly reduce the compression that can be achieved, limiting the trial of randomized Huffman tables.  
 
-- `ForceRGBA` : (0/1) will first rewrite the image as RGBA (32 bits per pixel) and then only optimize in that color mode, or restore the original if not compressed. This limits the possible compression methods and may generate an unnecessary alpha channel, so is not recommended (default is off, 0). 
+- `LargeFileSize` : The uncompressed file size in bytes that determines a small/ large image and adjusts processing effort accordingly. The default 66400 bytes corresponds to an image larger than 128 x 128 pixels.  
 
+
+## Warnings
+
+**Compatibility**  
+Although this software produces fully compliant PNG images, a minority of image editors and viewers contain bugs which may cause problems displaying these optimized images. Always backup images before optimizing and test compatibility for your given application.  
+
+**Security**  
+This script should not be used on secure systems or to process unknown files from third parties. Malicious files and/ or crafted file names, can make the script and utility programs behave in unexpected ways. This is a fundamental limitation of the scripting environment used (Windows Batch).
+
+**Disk wear**  
+The brute force testing method can write each file *hundreds* of times to disk. For some media types, including Solid State Drives (SSDs), this may cause excessive wear and shorten the life of the drive. It is strongly recommended that you use a RAM disk or other media that can tolerate heavy write cycles.
 
 
 ## Legal
@@ -92,7 +97,7 @@ Big thanks to: David Blake, counting_pine, fred01, markcramer, Greg Roelofs, Ken
 - Added PNGOUT parameters for efficiency and correctness: use `-kp` to avoid palette trials and `-f6` to avoid filter trials, where possible.
 - Changed OptiPNG parameters `−nb −nc −np` to the more compact `-nx`, when disabling all lossless image reductions.
 - Improved script readability: indents changed from tabs to spaces(!);  removed use of `start /belownormal` to run PNGOUT; removed inline comments; made verbose output (log) clearer.
-- Reformatted 'README' for markdown and tweaked text.
+- Reformatted 'README' for markdown and tweaked text. Added a 'Warnings' section.
 - Added 'huffmix.exe' program v0.6b2 (06-May-2014). It selects the smallest Huffman blocks from two related files and combines them into a new file.
 - Updated PNGOUT license.
 
