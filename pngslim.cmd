@@ -33,7 +33,6 @@
     pngoptimizercl.exe
     pngout.exe
     pngrewrite.exe
-    zlib.dll
   ) do (
     if not exist %%i (
       echo Program not found: %%i.
@@ -416,13 +415,15 @@
   )
   >>%log% echo %~z1b - T4S1 Tested OptiPNG
 
-  for /L %%i in (1,1,4) do (
-    advdef.exe -q -z%%i "%~1"
+  for /L %%i in (1,1,3) do (
+    advdef.exe -q -z%%i -i200 "%~1"
   )
-  >>%log% echo %~z1b - T4S2 Tested advdef
+  >>%log% echo %~z1b - %time% T4S2: Tested advdef (zlib, libdeflate, 7z).
+  advdef.exe -q -z4 -i500 "%~1"
+  >>%log% echo %~z1b - %time% T4S3: Tested advdef (Zoplfi).
   
   deflopt.exe -s -k "%~1" >nul
-  >>%log% echo %~z1b - T4S3 Tested deflopt
+  >>%log% echo %~z1b - T4S4 Tested deflopt
   
   echo %~z1b - Final compression sweep finished.
 

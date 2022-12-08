@@ -37,23 +37,22 @@ Although this software produces fully compliant PNG images, a minority of image 
 This script should not be used on secure systems or to process unknown files from third parties. Malicious files and/ or crafted file names, can make the script and utility programs behave in unexpected ways. This is a fundamental limitation of the scripting environment used (Windows Batch).
 
 **Disk wear**  
-The brute force testing method can write each file *hundreds* of times to disk. For some media types, including Solid State Drives (SSDs), this may cause excessive wear and shorten the life of the drive. It is strongly recommended that you use a RAM disk or other media that can tolerate heavy write cycles.
+The optimization process can write each file *hundreds* of times to disk. For some storage media, including Solid State Drives (SSDs), this may cause excessive wear and shorten the life of the device. It is strongly recommended that you use a RAM drive (fast and robust) or other media that can tolerate heavy write cycles.
 
 
 ## Legal
 
 The software ('pngslim' script) is provided 'as-is', without any express or implied warranty. In no event will the author be held liable for any damages arising from the use of this software. Permission is granted to anyone to use this software for any purpose, including commercial applications, and to alter it and redistribute it freely. The software is dedicated to the Public Domain.
 
-The additional software included in the 'pngslim' package ('apps') is provided for convenience. The additional software is the property of other authors and may be subject to different licensing and legal conditions. Please check the original authors' websites for details and latest information.
+The additional software included in the 'pngslim' package ('apps') is provided for convenience. The additional software is the property of other authors and may be subject to different licensing and legal conditions. Please check the original authors' websites for details and latest information. I have no affiliation with the authors of the included software.
 
 
 
 ## Included programs
 
-Note: I have no affiliation with the authors of the included software.
-Please read the comments under the 'Legal' section of this readme.
+All binaries are compiled for 32 bit Windows (w32).
 
-- advdef v1.15 (31-Oct-2005) by Andrea Mazzoleni. <br>
+- advdef v2.4 (22-Nov-2022) by Andrea Mazzoleni. <br>
    http://www.advancemame.it/comp-readme.html
 
 - DeflOpt v2.07 (05-Sep-2007) by Ben Jos Walbeehm. <br>
@@ -74,11 +73,8 @@ Please read the comments under the 'Legal' section of this readme.
 - PNGOUT (13-Feb-2015) by Ken Silverman. <br>
    http://advsys.net/ken/utils.htm
 
-- pngrewrite v1.4.0 (8-Jun-2010) by Jason Summer. <br>
+- pngrewrite v1.4.0 (8-Jun-2010) by Jason Summers. <br>
    http://entropymine.com/jason/pngrewrite/
-
-- zlib v1.2.3 (18-Jul-2005) by Jean-Loup Gailly and Mark Adler. <br>
-   http://www.zlib.net/
 
 
 
@@ -94,10 +90,12 @@ Big thanks to: David Blake, counting_pine, fred01, markcramer, Greg Roelofs, Ken
 
 **v1.2 Development 2022** 
 - Improved Trial (2) - optimizing number of Huffman blocks and PNGOUT Deflate strategy. Trial is smarter, faster and may improve compression for large images. Removed `HuffmanTrials` parameter (now unnecessary) and increased maximum number of blocks from 512 to 1024. Trial is skipped early for files well optimized with a single block.
+- Improved Trial (3). Removed `RandomTableTrials` parameter (now unnecessary).
 - Added PNGOUT parameters for efficiency and correctness: use `-kp` to avoid palette trials and `-f6` to avoid filter trials, where possible.
 - Changed OptiPNG parameters `−nb −nc −np` to the more compact `-nx`, when disabling all lossless image reductions.
-- Improved script readability: indents changed from tabs to spaces(!);  removed use of `start /belownormal` to run PNGOUT; removed inline comments; made verbose output (log) clearer.
+- Improved script readability: indents changed from tabs to spaces(!);  removed use of `start /belownormal` to run PNGOUT; removed inline comments; made verbose output (/logging) clearer.
 - Reformatted 'README' for markdown and tweaked text. Added a 'Warnings' section.
+- Update 'advdef.exe' to version 2.4 (was 1.15). Adds 'libdeflate' and 'Zopfli' compression engines; many improvements and fixes.
 - Added 'huffmix.exe' program v0.6b2 (06-May-2014). It selects the smallest Huffman blocks from two related files and combines them into a new file.
 - Updated PNGOUT license.
 
