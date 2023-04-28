@@ -52,7 +52,7 @@ The additional software included in the 'pngslim' package ('apps') is provided f
 
 All binaries are compiled for 32 bit Windows (w32).
 
-- advdef v2.4 (22-Nov-2022) by Andrea Mazzoleni. <br>
+- advdef v2.5 (22-Jan-2023) by Andrea Mazzoleni. <br>
    http://www.advancemame.it/comp-readme.html
 
 - DeflOpt v2.07 (05-Sep-2007) by Ben Jos Walbeehm. <br>
@@ -66,9 +66,6 @@ All binaries are compiled for 32 bit Windows (w32).
 
 - pngcheck v3.0.3 (25-Apr-2021) by Alexander Lehmann, Andreas Dilger, Greg Roelofs. <br>
    http://www.libpng.org/pub/png/apps/pngcheck.html
-
-- PngOptimizerCL v1.8 (6-Nov-2008) by Hadrien Nilsson <br>
-   http://psydk.org/PngOptimizer.php
 
 - PNGOUT (13-Feb-2015) by Ken Silverman. <br>
    http://advsys.net/ken/utils.htm
@@ -88,14 +85,14 @@ Big thanks to: David Blake, counting_pine, fred01, markcramer, Greg Roelofs, Ken
 
 ## History
 
-**v1.2 Development 2022** 
+**v1.2 Development 2023** 
 - Improved Trial (2) - optimizing number of Huffman blocks and PNGOUT Deflate strategy. Trial is smarter, faster and may improve compression for large images. Removed `HuffmanTrials` parameter (now unnecessary) and increased maximum number of blocks from 512 to 1024. Trial is skipped early for files well optimized with a single block.
 - Improved Trial (3). Removed `RandomTableTrials` parameter (now unnecessary).
 - Added PNGOUT parameters for efficiency and correctness: use `-kp` to avoid palette trials and `-f6` to avoid filter trials, where possible.
 - Changed OptiPNG parameters `−nb −nc −np` to the more compact `-nx`, when disabling all lossless image reductions.
 - Improved script readability: indents changed from tabs to spaces(!);  removed use of `start /belownormal` to run PNGOUT; removed inline comments; made verbose output (/logging) clearer.
 - Reformatted 'README' for markdown and tweaked text. Added a 'Warnings' section.
-- Update 'advdef.exe' to version 2.4 (was 1.15). Adds 'libdeflate' and 'Zopfli' compression engines; many improvements and fixes.
+- Update 'advdef.exe' to version 2.5 (was 1.15). Adds 'libdeflate' and 'Zopfli' compression engines; many improvements and fixes.
 - Added 'huffmix.exe' program v0.6b2 (06-May-2014). It selects the smallest Huffman blocks from two related files and combines them into a new file.
 - Updated PNGOUT license.
 

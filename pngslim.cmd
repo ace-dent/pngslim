@@ -30,7 +30,6 @@
     huffmix.exe
     optipng.exe
     pngcheck.exe
-    pngoptimizercl.exe
     pngout.exe
     pngrewrite.exe
   ) do (
@@ -117,7 +116,6 @@
     goto T1_Step1_RGBA
   )
 
-  :: pngoptimizercl.exe -file:"%~1" >nul
   pngrewrite.exe "%~1" "%~1" 2>nul
   pngout.exe -q -k1 -ks -kp -f6 -s1 "%~1"
   echo %~z1b - Preprocessing complete (optimized metadata, palette and transparency).
