@@ -392,7 +392,24 @@
 :: Trial (3) - Test randomized Huffman tables
 ::
 
+  echo %~z1b - Compression trial 3 running (Randomize initial Huffman tables)...
+  :: From extensive testing, 100 consecutive trials is optimal.
+  :: For faster processing set to 1, to effectively skip this stage.
   set RandomTableTrials=100
+
+  :: Test the image is really best optimized with only static Huffman blocks
+  if %BestBlocks% EQU 0 (
+    deflopt.exe -s -k -b "%~1" >nul
+    for /f "tokens=2 delims=n" %%i in ('pngout.exe -L "%~1"') do (
+      set BestBlocks=%%i
+    )
+  )
+  if %BestBlocks% EQU 0 (
+    >>%log% echo %~z1b - T3S1 Skipping trial. No dynamic Huffman blocks to optimize.
+    goto T3_End
+  )
+
+
 :T3_Step1_Loop
   set FileSize=%~z1
   echo %~z1b - Compression trial 3 running (%RandomTableTrials%x random Huffman tables)...
@@ -401,6 +418,7 @@
   )
   if %~z1 LSS %FileSize% goto T3_Step1_Loop
 
+:T3_End
   echo %~z1b - Compression trial 3 complete (Randomize initial Huffman tables).
 
 
