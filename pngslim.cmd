@@ -1,11 +1,12 @@
 @echo off & setlocal enableextensions
 
 
-:: pngslim 
+:: pngslim
 ::  - by Andrew C.E. Dent, dedicated to the Public Domain.
 
   set Version=(v1.2 pre-release)
- 
+
+
   set ForceRGBA=0
   set ReduceDiskWrites=1
   set LargeFileSize=66400
@@ -136,7 +137,7 @@
   for %%i in (1,2,4,8) do (
     if %LargeFile% EQU 0 (
       for %%j in (1,2) do (
-        for /L %%k in (0,1,5) do ( 
+        for /L %%k in (0,1,5) do (
           pngout.exe -q -k1 -s0 -d%%i -n%%j -f%%k -c0 "%~1"
         )
       )
@@ -157,7 +158,7 @@
   if errorlevel 3 goto T1_Step1_Paletted
   set ImageColorMode="Gray"
   if %ImageTransparencyMode% NEQ "Basic" (
-    set ImageTransparencyMode="Multiple" 
+    set ImageTransparencyMode="Multiple"
   )
   if %LargeFile% EQU 0 (
     for %%i in (1,2) do (
@@ -180,7 +181,7 @@
   pngout.exe -q -s4 -c3 -d8 "%~1"
   if errorlevel 3 goto T1_Step1_RGB
   if %ImageColorMode% NEQ "Gray" (
-    set ImageColorMode="Paletted" 
+    set ImageColorMode="Paletted"
   )
   for %%i in (1,2,4,8) do (
     if %LargeFile% EQU 0 (
@@ -207,7 +208,7 @@
   if errorlevel 3 goto T1_Step1_RGBA
   if %ImageColorMode% NEQ "Gray" (
     if %ImageColorMode% NEQ "Paletted" (
-      set ImageColorMode="RGB" 
+      set ImageColorMode="RGB"
     )
   )
   set ImageTransparencyMode="Basic"
@@ -232,7 +233,7 @@
   if  %ForceRGBA% NEQ 1 (
     if %ImageColorMode% NEQ "Gray" (
       if %ImageColorMode% NEQ "Paletted" (
-        set ImageColorMode="RGB" 
+        set ImageColorMode="RGB"
       )
     )
     if %ImageTransparencyMode% NEQ "Basic" (
@@ -296,7 +297,7 @@
   for /f "tokens=2 delims=n" %%i in ('pngout.exe -L "%~1"') do (
     set BestBlocks=%%i
   )
-  >>%log% echo %~z1b - T2S0 Initial number of Huffman blocks = %BestBlocks%.
+  >>%log% echo %~z1b - T2S0 Initial number of Huffman blocks: %BestBlocks%.
 
 
   :: Exit trial early for images where a single Huffman block is optimal
@@ -377,10 +378,11 @@
 
 
 :T2_End
+
   for /f "tokens=2 delims=n" %%i in ('pngout.exe -L "%~1"') do (
     set BestBlocks=%%i
   )
-  >>%log% echo %~z1b - T2S2 Optimal number of Huffman blocks = %BestBlocks%.
+  >>%log% echo %~z1b - T2S2 Optimum number of Huffman blocks: %BestBlocks%.
 
   echo %~z1b - Compression trial 2 complete (Huffman blocks and Deflate strategy).
 
@@ -398,7 +400,8 @@
     pngout.exe -q -k1 -ks -kp -f6 -s0 -r "%~1"
   )
   if %~z1 LSS %FileSize% goto T3_Step1_Loop
-  echo %~z1b - Compression trial 3 complete (Randomized Huffman tables).
+
+  echo %~z1b - Compression trial 3 complete (Randomize initial Huffman tables).
 
 
 
@@ -432,11 +435,11 @@
   :: Files expanded over a threshold size, are copied for debugging
   set /a FailSize=((%OriginalFileSize%*1001)/1000)+2
   if %log%=="CON" (
-    echo  Original size: %OriginalFileSize%b. 
+    echo  Original size: %OriginalFileSize%b.
     echo  Failure size: %FailSize%b. Margin = 0.1%% + 2 bytes.
     if %~z1 GTR %FailSize% (
       copy %1 %1._fail >nul
-      echo  Processed size: %~z1b. Larger file copied for debugging. 
+      echo  Processed size: %~z1b. Larger file copied for debugging.
     )
   )
 
@@ -464,7 +467,7 @@
   set /a FileSizeReduction=(%FileSize%*100)/%OriginalFileSize%
   set /a TotalBytesSaved+=%FileSize%
 
-  echo Optimized: "%~n1". Slimmed %FileSizeReduction%%%, %FileSize% bytes.
+  echo Optimized: "%~n1". Slimmed %FileSize% bytes, %FileSizeReduction%%%.
   del "%~1.backup"
   goto NextFile
 

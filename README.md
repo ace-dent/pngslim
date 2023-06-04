@@ -5,7 +5,7 @@
 &emsp;&emsp; – _when every byte counts!_  
 
 Batch optimization of PNG images for MS Windows, using multiple tools to achieve the smallest file size, with scant regard for time. 
-Produced by Andrew C.E. Dent, 2022.  
+Produced by Andrew C.E. Dent, 2023.  
 <br>
 
 
@@ -28,7 +28,7 @@ By default the script parameters are highly tuned for the majority of use cases 
 - `LargeFileSize` : The uncompressed file size in bytes that determines a small/ large image and adjusts processing effort accordingly. The default 66400 bytes corresponds to an image larger than 128 x 128 pixels.  
 
 
-## Warnings
+### Limitations
 
 **Compatibility**  
 Although this software produces fully compliant PNG images, a minority of image editors and viewers contain bugs which may cause problems displaying these optimized images. Always backup images before optimizing and test compatibility for your given application.  
@@ -91,7 +91,7 @@ Big thanks to: David Blake, counting_pine, fred01, markcramer, Greg Roelofs, Ken
 - Added PNGOUT parameters for efficiency and correctness: use `-kp` to avoid palette trials and `-f6` to avoid filter trials, where possible.
 - Changed OptiPNG parameters `−nb −nc −np` to the more compact `-nx`, when disabling all lossless image reductions.
 - Improved script readability: indents changed from tabs to spaces(!);  removed use of `start /belownormal` to run PNGOUT; removed inline comments; made verbose output (/logging) clearer.
-- Reformatted 'README' for markdown and tweaked text. Added a 'Warnings' section.
+- Reformatted 'README' for markdown and tweaked text. Added a 'Limitations' section.
 - Update 'advdef.exe' to version 2.5 (was 1.15). Adds 'libdeflate' and 'Zopfli' compression engines; many improvements and fixes.
 - Added 'huffmix.exe' program v0.6b2 (06-May-2014). It selects the smallest Huffman blocks from two related files and combines them into a new file.
 - Updated PNGOUT license.
