@@ -51,6 +51,7 @@
   set TotalBytesSaved=0
   set TotalFiles=0
   set ErrorsLogged=0
+  set SessionID=%random%
 
   :: Count total files to process
   for %%i in (%*) do set /a TotalFiles+=1
@@ -69,7 +70,7 @@
   :: Check PNG file for errors
   pngcheck.exe -q "%~1"
   if errorlevel 1 (
-    pngcheck.exe -vvt "%~1" > "%~1".error.log
+    pngcheck.exe -vvt "%~1" > "%~1.%SessionID%.error.log"
     set /a ErrorsLogged+=1
     echo Error detected: Skipped invalid file.
     goto NextFile
@@ -77,8 +78,8 @@
 
   set OriginalFileSize=%~z1
 
-  copy /Z "%~1" "%~1.backup" >nul
-  fc.exe /B "%~1" "%~1.backup" >nul
+  copy /Z "%~1" "%~1.%SessionID%.backup" >nul
+  fc.exe /B "%~1" "%~1.%SessionID%.backup" >nul
   if errorlevel 1 (
     set /a ErrorsLogged+=1
     echo System error: Backup file corrupted.
@@ -475,7 +476,7 @@
   :: Check output PNG file for errors
   pngcheck.exe -q "%~1"
   if errorlevel 1 (
-    pngcheck.exe -vvt "%~1" > "%~1".error.log
+    pngcheck.exe -vvt "%~1" > "%~1.%SessionID%.error.log"
     set /a ErrorsLogged+=1
     echo Error detected: Optimized file is not valid.
     goto RestoreFile
@@ -486,13 +487,13 @@
   set /a TotalBytesSaved+=%FileSize%
 
   echo Optimized: "%~n1". Slimmed %FileSize% bytes, %FileSizeReduction%%%.
-  del "%~1.backup"
+  del "%~1.%SessionID%.backup"
   goto NextFile
 
 
 :RestoreFile
   del "%~1"
-  rename "%~1.backup" "%~nx1"
+  rename "%~1.%SessionID%.backup" "%~nx1"
   if errorlevel 1 (
     set /a ErrorsLogged+=1
     echo System error: Failed to rename backup file.
