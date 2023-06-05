@@ -1,25 +1,33 @@
+# Software licenses
 
-# ADVDEF - LICENSE
+## ADVDEF
 https://github.com/amadvance/advancecomp/blob/master/COPYING
-(Accessed 07-Dec-2022)
+(Accessed 07-Dec-2022) :
 
-GNU GENERAL PUBLIC LICENSE 
-Version 3, 29 June 2007
+GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007  
 https://www.gnu.org/licenses/gpl-3.0.html
 
+---
 
-
-# DEFLOPT - LICENSE
-http://web.archive.org/web/20131208161446/http://www.walbeehm.com/download/index.html
-(Accessed 30-Dec-2019)
+## DEFLOPT
+http://web.archive.org/web/20131208161446/http://www.walbeehm.com/download/index.html 
+(Accessed 30-Dec-2019) :
 
 Copyright (C) 2003-2007 by Ben Jos Walbeehm.
 
+---
 
+## DEFLUFF
+https://web.archive.org/web/20230604215335/https://encode.su/threads/1214-defluff-a-deflate-huffman-optimizer 
+(Accessed 04-Jun-2023) :
 
-# OPTIPNG - LICENSE
+Copyright (c) 2010-2011 Joachim Henke
+
+---
+
+## OPTIPNG
 http://optipng.sourceforge.net/license.txt
-(Accessed 31-Aug-2021)
+(Accessed 31-Aug-2021) :
 
 Copyright (C) 2001-2017 Cosmin Truta and the Contributing Authors.
 For the purpose of copyright and licensing, the list of Contributing Authors is available in the accompanying AUTHORS file.
@@ -32,11 +40,11 @@ Permission is granted to anyone to use this software for any purpose, including 
 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
 3. This notice may not be removed or altered from any source distribution.
 
+---
 
-
-# PNGCHECK - LICENSE
+## PNGCHECK
 http://www.libpng.org/pub/png/apps/pngcheck.html
-(Accessed 25-Aug-2021)
+(Accessed 25-Aug-2021) :
 
 Copyright 1995-2020 by
 - Alexander Lehmann <lehmann@usa.net>,
@@ -48,21 +56,11 @@ Copyright 1995-2020 by
 
  Permission to use, copy, modify, and distribute this software and its documentation for any purpose and without fee is hereby granted, provided that the above copyright notice appear in all copies and that both that copyright notice and this permission notice appear in supporting documentation.  This software is provided "as is" without express or implied warranty.
 
+--- 
 
-
-# PNGOPTIMIZERCL - LICENSE
-https://raw.githubusercontent.com/hadrien-psydk/pngoptimizer/master/projects/pngoptimizercl/License.txt
-(Accessed 30-Dec-2019)
-
-GNU GENERAL PUBLIC LICENSE
-Version 2, June 1991
-https://www.gnu.org/licenses/old-licenses/gpl-2.0.html
-
-
-
-# PNGOUT - LICENSE
+## PNGOUT
 http://www.advsys.net/ken/utils.htm#pngoutkziplicense
-(Accessed 10-Jul-2021)
+(Accessed 10-Jul-2021) :
 
 I have gotten a lot of requests about bundling the command line executables, or releasing the source code to KZIP and PNGOUT. This is my license (updated 01/16/2021):
 
@@ -72,11 +70,11 @@ I have gotten a lot of requests about bundling the command line executables, or 
 - For commercial requests (such as bundling with a commercial product), please write to my business partner, David Blake.
 - When bundling, my credit (both my name and website) must be clearly displayed in some reasonable fashion that can be seen by an average user.
 
+---
 
-
-# PNGREWRITE - LICENSE
+## PNGREWRITE
 http://entropymine.com/jason/pngrewrite/
-(Accessed 30-Dec-2019)
+(Accessed 30-Dec-2019) :
 
 Copyright (c) 2010 Jason Summers
 
@@ -91,3 +89,5 @@ freely, subject to the following restrictions:
 1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
 3. This notice may not be removed or altered from any source distribution.
+
+---

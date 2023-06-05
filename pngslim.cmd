@@ -28,6 +28,7 @@
   for %%i in (
     advdef.exe
     deflopt.exe
+    defluff.exe
     huffmix.exe
     optipng.exe
     pngcheck.exe
@@ -442,9 +443,18 @@
   advdef.exe -q -z4 -i500 "%~1"
   >>%log% echo %~z1b - %time% T4S3: Tested advdef (Zoplfi).
   
-  deflopt.exe -s -k "%~1" >nul
-  >>%log% echo %~z1b - T4S4 Tested deflopt
-  
+  deflopt.exe -s -k -b "%~1" >nul
+  >>%log% echo %~z1b - T4S4 Tested deflopt.
+
+  defluff.exe <"%~1" >"%~1.%SessionID%.temp.png" 2>nul
+  deflopt.exe -s -k -b "%~1.%SessionID%.temp.png" >nul
+  huffmix.exe -q "%~1" "%~1.%SessionID%.temp.png" "%~1"
+  del "%~1.%SessionID%.temp.png"
+  if %BestBlocks% GEQ 2 (
+    deflopt.exe -s -k "%~1" >nul
+  )
+  >>%log% echo %~z1b - T4S5 Tested defluff and deflopt.
+
   echo %~z1b - Final compression sweep finished.
 
 

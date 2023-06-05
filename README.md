@@ -57,6 +57,9 @@ All binaries are compiled for 32 bit Windows (w32).
 
 - DeflOpt v2.07 (05-Sep-2007) by Ben Jos Walbeehm. <br>
    http://web.archive.org/web/20131208161446/http://www.walbeehm.com/download/index.html
+   
+- defluff v0.3.2 (07-Apr-2011) by Joachim Henke. <br>
+   https://web.archive.org/web/20230604215335/https://encode.su/threads/1214-defluff-a-deflate-huffman-optimizer
 
 - Huffmix v0.6b2 (06-May-2014) by Frédéric Kayser. <br>
    https://encode.su/threads/1313-Huffmix-a-PNGOUT-r-catalyst
@@ -88,11 +91,13 @@ Big thanks to: David Blake, counting_pine, fred01, markcramer, Greg Roelofs, Ken
 **v1.2 Development 2023** 
 - Improved Trial (2) - optimizing number of Huffman blocks and PNGOUT Deflate strategy. Trial is smarter, faster and may improve compression for large images. Removed `HuffmanTrials` parameter (now unnecessary) and increased maximum number of blocks from 512 to 1024. Trial is skipped early for files well optimized with a single block.
 - Improved Trial (3) - optimizing Huffman tables. Removed `RandomTableTrials` from user parameters. Skip trial entirely for (small) images that only have static Huffman blocks.
+- Extend Trial (4) - final compression sweep includes defluff working with DeflOpt and Huffmix.
 - Added PNGOUT parameters for efficiency and correctness: use `-kp` to avoid palette trials and `-f6` to avoid filter trials, where possible.
 - Changed OptiPNG parameters `−nb −nc −np` to the more compact `-nx`, when disabling all lossless image reductions.
 - Improved script readability: indents changed back from tabs to spaces(!);  removed use of `start /belownormal` to run PNGOUT; removed inline comments; made verbose output ('logging') clearer.
 - Reformatted 'README' for markdown and tweaked text. Added a 'Limitations' section.
 - Update 'advdef.exe' to version 2.5 (was 1.15). Adds 'libdeflate' and 'Zopfli' compression engines; many improvements and fixes.
+- Added 'defluff.exe' program v0.3.2 (07-Apr-2011). Provides some low-level optimizations for Deflate data.
 - Added 'huffmix.exe' program v0.6b2 (06-May-2014). It selects the smallest Huffman blocks from two related files and combines them into a new file.
 - Updated PNGOUT license.
 
