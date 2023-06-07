@@ -94,7 +94,7 @@
   optipng.exe -q -i0 -zc1 -zm8 -zs3 -f0 -force "%~1"
 
   :: Strip metadata and create an uncompressed, 32bpp RGBA bitmap
-  pngout.exe -q -s4 -f0 -c6 -k0 -force "%~1"
+  pngout.exe -q -k0 -s4 -f0 -c6 -force "%~1"
   if errorlevel 1 (
     echo Cannot compress: Unsupported PNG format.
     goto RestoreFile
@@ -132,7 +132,7 @@
   echo %~z1b - Compression trial 1 running (Color and filter settings)...
 
 :T1_Step1_Gray
-  pngout.exe -q -s4 -c0 -d8 "%~1"
+  pngout.exe -q -k1 -s4 -c0 -d8 "%~1"
   if errorlevel 3 goto T1_Step1_Gray+Alpha
   set ImageColorMode="Gray"
   set ImageTransparencyMode="Basic"
@@ -156,7 +156,7 @@
 
 
 :T1_Step1_Gray+Alpha
-  pngout.exe -q -s4 -c4 "%~1"
+  pngout.exe -q -k1 -s4 -c4 "%~1"
   if errorlevel 3 goto T1_Step1_Paletted
   set ImageColorMode="Gray"
   if %ImageTransparencyMode% NEQ "Basic" (
@@ -180,7 +180,7 @@
 
 
 :T1_Step1_Paletted
-  pngout.exe -q -s4 -c3 -d8 "%~1"
+  pngout.exe -q -k1 -s4 -c3 -d8 "%~1"
   if errorlevel 3 goto T1_Step1_RGB
   if %ImageColorMode% NEQ "Gray" (
     set ImageColorMode="Paletted"
@@ -206,7 +206,7 @@
 
 :T1_Step1_RGB
   if %ImageColorMode%=="Gray" goto T1_Step2
-  pngout.exe -q -s4 -c2 "%~1"
+  pngout.exe -q -k1 -s4 -c2 "%~1"
   if errorlevel 3 goto T1_Step1_RGBA
   if %ImageColorMode% NEQ "Gray" (
     if %ImageColorMode% NEQ "Paletted" (
