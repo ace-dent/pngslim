@@ -439,10 +439,10 @@
   for /L %%i in (1,1,3) do (
     advdef.exe -q -z%%i -i200 "%~1"
   )
-  >>%log% echo %~z1b - %time% T4S2: Tested advdef (zlib, libdeflate, 7z).
+  >>%log% echo %~z1b - T4S2 Tested advdef (zlib, libdeflate, 7z).
   advdef.exe -q -z4 -i500 "%~1"
-  >>%log% echo %~z1b - %time% T4S3: Tested advdef (Zoplfi).
-  
+  >>%log% echo %~z1b - T4S3 Tested advdef (Zoplfi).
+
   deflopt.exe -s -k -b "%~1" >nul
   >>%log% echo %~z1b - T4S4 Tested deflopt.
 
@@ -463,11 +463,11 @@
 
   :: Files expanded over a threshold size, are copied for debugging
   set /a FailSize=((%OriginalFileSize%*1001)/1000)+2
-  if %log%=="CON" (
+  if not %log%=="NUL" (
     echo  Original size: %OriginalFileSize%b.
     echo  Failure size: %FailSize%b. Margin = 0.1%% + 2 bytes.
     if %~z1 GTR %FailSize% (
-      copy %1 %1._fail >nul
+      copy /Z "%~1" "%~1.%SessionID%._fail" >nul
       echo  Processed size: %~z1b. Larger file copied for debugging.
     )
   )
