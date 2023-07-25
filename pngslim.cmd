@@ -47,12 +47,10 @@
     goto TheEnd
   )
 
-  set FileSize=0
-  set FileSizeReduction=0
-  set TotalBytesSaved=0
-  set TotalFiles=0
-  set ErrorsLogged=0
   set SessionID=%random%
+  set TotalFiles=0
+  set TotalBytesSaved=0
+  set ErrorsLogged=0
 
   :: Count total files to process
   for %%i in (%*) do set /a TotalFiles+=1
@@ -77,7 +75,7 @@
     goto NextFile
   )
 
-  set OriginalFileSize=%~z1
+  set FileSizeOriginal=%~z1
 
   copy /Z "%~1" "%~1.%SessionID%.backup" >nul
   fc.exe /B "%~1" "%~1.%SessionID%.backup" >nul
@@ -86,6 +84,12 @@
     echo System error: Backup file corrupted.
     goto Close
   )
+
+  :: Benchmark start time
+  set WallClockUnits=seconds
+  set "t=%time::0=: %"
+  set /a WallClockStart=(%t:~0,2%*3600)+(%t:~3,2%*60)+%t:~6,2%
+  set WallClockStartDate=%date%
 
 
 :PreprocessFile
@@ -434,7 +438,7 @@
   for %%i in (32k,16k,8k,4k,2k,1k,512,256) do (
     optipng.exe -q -nx -zw%%i -zc1-9 -zm1-9 -zs0-3 -f0-5 "%~1"
   )
-  >>%log% echo %~z1b - T4S1 Tested OptiPNG
+  >>%log% echo %~z1b - T4S1 Tested OptiPNG.
 
   for /L %%i in (1,1,3) do (
     advdef.exe -q -z%%i -i200 "%~1"
@@ -461,12 +465,27 @@
 
 :PostprocessFile
 
-  :: Files expanded over a threshold size, are copied for debugging
-  set /a FailSize=((%OriginalFileSize%*1001)/1000)+2
+  :: Benchmark end time
+  set "t=%time::0=: %"
+  set /a WallClockEnd=(%t:~0,2%*3600)+(%t:~3,2%*60)+%t:~6,2%
+  :: Check if we crossed midnight
+  if not %WallClockStartDate%==%date% (
+    set /a WallClockEnd+=86400
+  )
+  set /a WallClockElapsed=%WallClockEnd%-%WallClockStart%
+  :: Convert longer times to minutes
+  if %WallClockElapsed% GEQ 180 (
+    set /a WallClockElapsed/=60
+    set WallClockUnits=minutes
+  )
+  echo Processing took ~%WallClockElapsed% %WallClockUnits%.
+
+  :: Files expanded over a threshold size may be copied for debugging
+  set /a FailSize=((%FileSizeOriginal%*1001)/1000)+2
   if not %log%=="NUL" (
-    echo  Original size: %OriginalFileSize%b.
-    echo  Failure size: %FailSize%b. Margin = 0.1%% + 2 bytes.
     if %~z1 GTR %FailSize% (
+      echo  Original size : %FileSizeOriginal%b.
+      echo  Failure size  : %FailSize%b. Margin = 0.1%% + 2 bytes.
       copy /Z "%~1" "%~1.%SessionID%._fail" >nul
       echo  Processed size: %~z1b. Larger file copied for debugging.
     )
@@ -478,7 +497,7 @@
     set /a ErrorsLogged+=1
     goto RestoreFile
   )
-  if %~z1 GEQ %OriginalFileSize% (
+  if %~z1 GEQ %FileSizeOriginal% (
     echo %~z1b - Could not compress file further.
     goto RestoreFile
   )
@@ -492,11 +511,27 @@
     goto RestoreFile
   )
 
-  set /a FileSize=%OriginalFileSize%-%~z1
-  set /a FileSizeReduction=(%FileSize%*100)/%OriginalFileSize%
-  set /a TotalBytesSaved+=%FileSize%
+  :: Benchmark file size reduction
+  set /a FileBytesSaved=%FileSizeOriginal%-%~z1
+  set /a TotalBytesSaved+=%FileBytesSaved%
+  :: Calculate high precision percentage without overflowing 32 bit signed integer
+  if %FileBytesSaved% LEQ 214000 (
+    set /a "FileReductionPercentX100=(100*100*%FileBytesSaved%)/%FileSizeOriginal%"
+  ) else (
+    set /a "FileReductionPercentX100=((100*%FileBytesSaved%)/%FileSizeOriginal%)*100"
+  )
+  :: Format the percentage to always show 2 signifcant figures
+  if %FileReductionPercentX100% LEQ 99 (
+    set FileReductionPct=0.%FileReductionPercentX100%
+  ) else (
+    if %FileReductionPercentX100% LEQ 999 (
+      set FileReductionPct=%FileReductionPercentX100:~0,1%.%FileReductionPercentX100:~1,1%
+    ) else (
+      set /a FileReductionPct=%FileReductionPercentX100%/100
+    )
+  )
 
-  echo Optimized: "%~n1". Slimmed %FileSize% bytes, %FileSizeReduction%%%.
+  echo Optimized: "%~n1". Slimmed %FileBytesSaved% bytes, ~%FileReductionPct%%% saving.
   del "%~1.%SessionID%.backup"
   goto NextFile
 
@@ -509,7 +544,7 @@
     echo System error: Failed to rename backup file.
     goto Close
   )
-  echo Original file restored.
+  echo Original file restored - %~z1b.
 
 :NextFile
   echo.
@@ -522,7 +557,7 @@
   set TotalFiles=%CurrentFile%
   echo.
   echo Finished %date% %time% - pngslim %Version%.
-  echo Processed %TotalFiles% files. Slimmed %TotalBytesSaved% bytes.
+  echo Processed %TotalFiles% files. Slimmed %TotalBytesSaved% bytes in total.
   if %ErrorsLogged% GTR 0 (
     echo.
     echo WARNING! %ErrorsLogged% Errors logged.

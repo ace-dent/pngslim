@@ -92,6 +92,7 @@ Big thanks to: David Blake, counting_pine, fred01, markcramer, Greg Roelofs, Ken
 - Improved Trial (2) - optimizing number of Huffman blocks and PNGOUT Deflate strategy. Trial is smarter, faster and may improve compression for large images. Removed `HuffmanTrials` parameter (now unnecessary) and increased maximum number of blocks from 512 to 1024. Trial is skipped early for files well optimized with a single block.
 - Improved Trial (3) - optimizing Huffman tables. Removed `RandomTableTrials` from user parameters. Skip trial entirely for (small) images that only have static Huffman blocks.
 - Extend Trial (4) - final compression sweep includes defluff working with DeflOpt and Huffmix.
+- Provide more info: processing time per image and more accurate file reduction %.
 - Added PNGOUT parameters for efficiency and correctness: use `-kp` to avoid palette trials and `-f6` to avoid filter trials, where possible.
 - Changed OptiPNG parameters `−nb −nc −np` to the more compact `-nx`, when disabling all lossless image reductions.
 - Improved script readability: indents changed back from tabs to spaces(!);  removed use of `start /belownormal` to run PNGOUT; removed inline comments; made verbose output ('logging') clearer.
