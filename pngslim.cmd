@@ -63,6 +63,10 @@
   :: Basic file validation
   if /I "%~x1" NEQ ".png" goto NextFile
   if %~z1 LSS 67 goto NextFile
+  if %~z1 GTR 10485760 (
+    echo Large file skipped: "%~1" - exceeds 10MB.
+    goto NextFile
+  )
 
   echo %~z1b - Optimizing: "%~1"
 
