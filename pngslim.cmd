@@ -55,6 +55,14 @@
   :: Count total files to process
   for %%i in (%*) do set /a TotalFiles+=1
 
+  :: Check regional time separator for later benchmarking. Defaults to `:`
+  set Key="HKCU\Control Panel\International"
+  for /f "usebackq skip=2 tokens=3" %%a in (`reg.exe query %Key% /v sTime`) do (
+    set "TimeSeparator=%%a"
+  )
+  if not defined TimeSeparator set TimeSeparator=:
+
+
 :SelectFile
   set /a CurrentFile+=1
   set Status=[%CurrentFile%/%TotalFiles%] pngslim %Version%
@@ -90,10 +98,10 @@
   )
 
   :: Benchmark start time
+  set "WallClockStartDate=%date%"
+  call set "t=%%time:%TimeSeparator%0=%TimeSeparator% %%"
   set WallClockUnits=seconds
-  set "t=%time::0=: %"
   set /a WallClockStart=(%t:~0,2%*3600)+(%t:~3,2%*60)+%t:~6,2%
-  set WallClockStartDate=%date%
 
 
 :PreprocessFile
@@ -470,10 +478,10 @@
 :PostprocessFile
 
   :: Benchmark end time
-  set "t=%time::0=: %"
+  call set "t=%%time:%TimeSeparator%0=%TimeSeparator% %%"
   set /a WallClockEnd=(%t:~0,2%*3600)+(%t:~3,2%*60)+%t:~6,2%
   :: Check if we crossed midnight
-  if not %WallClockStartDate%==%date% (
+  if not "%WallClockStartDate%"=="%date%" (
     set /a WallClockEnd+=86400
   )
   set /a WallClockElapsed=%WallClockEnd%-%WallClockStart%
