@@ -63,14 +63,22 @@
   if not defined TimeSeparator set TimeSeparator=:
 
 
+
 :SelectFile
+
   set /a CurrentFile+=1
   set Status=[%CurrentFile%/%TotalFiles%] pngslim %Version%
   title %Status%
 
   :: Basic file validation
-  if /I "%~x1" NEQ ".png" goto NextFile
-  if %~z1 LSS 67 goto NextFile
+  if /I "%~x1" NEQ ".png" (
+    echo File skipped: "%~1" - invalid file type.
+    goto NextFile
+  )
+  if %~z1 LSS 67 (
+    echo File skipped: "%~1" - invalid file.
+    goto NextFile
+  )
   if %~z1 GTR 10485760 (
     echo Large file skipped: "%~1" - exceeds 10 MiB.
     goto NextFile
@@ -93,7 +101,7 @@
   fc.exe /B "%~1" "%~1.%SessionID%.backup" >nul
   if errorlevel 1 (
     set /a ErrorsLogged+=1
-    echo System error: Backup file corrupted.
+    echo System error: Backup file corrupted!
     goto Close
   )
 
@@ -548,12 +556,24 @@
   )
 
   echo Optimized: "%~n1". Slimmed %FileBytesSaved% bytes, ~%FileReductionPct%%% saving.
-  del "%~1.%SessionID%.backup"
+  if exist "%~1" (
+    del "%~1.%SessionID%.backup"
+  ) else (
+    set /a ErrorsLogged+=1
+    echo System error: Primary file missing!
+    goto Close
+  )
   goto NextFile
 
 
 :RestoreFile
-  del "%~1"
+  if exist "%~1.%SessionID%.backup" (
+    del "%~1"
+  ) else (
+    set /a ErrorsLogged+=1
+    echo System error: Backup file missing!
+    goto Close
+  )
   rename "%~1.%SessionID%.backup" "%~nx1"
   if errorlevel 1 (
     set /a ErrorsLogged+=1
