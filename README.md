@@ -21,7 +21,7 @@ Produced by Andrew C.E. Dent, 2023.
 ### Script parameters
 By default the script parameters are highly tuned for the majority of use cases but advanced users may wish to tweak them.
 
-- `ForceRGBA` : [0/1] will rewrite the image as an RGBA image (32 bits per pixel) and then only optimize in that color mode, or restore the original if not compressed. This limits the possible compression methods and may generate an unnecessary alpha channel, so is *not* recommended (default is off, 0).  
+- `ForceRGBA` : [0/1] will rewrite the image as an RGBA image at 32 bits per pixel (or RGB 24 bpp for fully opaque images) and then only optimize in that color mode, or restore the original if not compressed. This limits the possible compression methods and may produce larger files, so is *not* recommended (default is off, 0).  
 
 - `ReduceDiskWrites` : [0/1] Avoid writing files to disk when possible, to reduce wear on the drive (default is on, 1). This may slightly reduce the compression that can be achieved, limiting the trial of randomized Huffman tables.  
 
@@ -31,7 +31,7 @@ By default the script parameters are highly tuned for the majority of use cases 
 ### Limitations
 
 **Compatibility**  
-Although this software produces fully compliant PNG images, a minority of image editors and viewers contain bugs which may cause problems displaying these optimized images. Always backup images before optimizing and test compatibility for your given application.  
+Although this software produces fully compliant PNG images, a minority of image editors and viewers contain bugs which may cause problems displaying these optimized images. Always backup images before optimizing and test compatibility for your given application. Images with extended bit depths, at 16 bits per channel, will not be optimized.
 
 **Security**  
 This script should not be used on secure systems or to process unknown files from third parties. Malicious files and/ or crafted file names, can make the script and utility programs behave in unexpected ways. This is a fundamental limitation of the scripting environment used (Windows Batch).
@@ -89,6 +89,7 @@ Big thanks to: David Blake, counting_pine, fred01, markcramer, Greg Roelofs, Ken
 ## History
 
 **v1.2 Development 2023** 
+- Smarter Trial (1). Identify fully opaque images and avoid unnecessary trials with transparency.
 - Improved Trial (2) - optimizing number of Huffman blocks and PNGOUT Deflate strategy. Trial is smarter, faster and may improve compression for large images. Removed `HuffmanTrials` parameter (now unnecessary) and increased maximum number of blocks from 512 to 1024. Trial is skipped early for files well optimized with a single block.
 - Improved Trial (3) - optimizing Huffman tables. Removed `RandomTableTrials` from user parameters. Skip trial entirely for (small) images that only have static Huffman blocks.
 - Extend Trial (4) - final compression sweep includes defluff working with DeflOpt and Huffmix.

@@ -3,19 +3,17 @@
 
 :: pngslim
 ::  - by Andrew C.E. Dent, dedicated to the Public Domain.
-
   set Version=(v1.2 pre-release)
-
 
   set ForceRGBA=0
   set ReduceDiskWrites=1
-  set LargeFileSize=66400
 
   :: Log verbose output: NUL (none) / CON (console display)
   set log="NUL"
 
 
-  echo Started %date% %time% - pngslim %Version%.
+
+  echo Started %date% %time% - "%~n0" %Version%.
   echo.
 
   :: Check programs are available for the script
@@ -47,6 +45,8 @@
     goto TheEnd
   )
 
+  :: Global variables
+  set LargeFileSize=66400
   set SessionID=%random%
   set TotalFiles=0
   set TotalBytesSaved=0
@@ -112,12 +112,13 @@
   set /a WallClockStart=(%t:~0,2%*3600)+(%t:~3,2%*60)+%t:~6,2%
 
 
+
 :PreprocessFile
 
   :: Losslessly reduce 16 to 8bit per channel, if possible
   optipng.exe -q -i0 -zc1 -zm8 -zs3 -f0 -force "%~1"
 
-  :: Strip metadata and create an uncompressed, 32bpp RGBA bitmap
+  :: Strip metadata and create an uncompressed, 32bpp RGBA baseline
   pngout.exe -q -k0 -s4 -f0 -c6 -force "%~1"
   if errorlevel 1 (
     echo Cannot compress: Unsupported PNG format.
@@ -125,27 +126,46 @@
   )
   >>%log% echo %~z1b - T0S1 Written uncompressed file with stripped metadata.
 
-  set ImageColorMode="Undetermined"
-  set ImageTransparencyMode="Undetermined"
-
+  :: File metrics
   set LargeFile=0
   if %~z1 GTR %LargeFileSize% set LargeFile=1
-
   set /a FileMaxHuffmanBlocks=%~z1/256
   if %FileMaxHuffmanBlocks% GTR 1024 set FileMaxHuffmanBlocks=1024
-  >>%log% echo %~z1b - T0S2 File metrics: Max Huffman blocks = %FileMaxHuffmanBlocks%, Large file = %LargeFile%.
+  >>%log% echo %~z1b - T0S2 Max Huffman blocks = %FileMaxHuffmanBlocks%. Large file = %LargeFile%.
 
+  :: Image analysis
+  set ImageColorMode="Undetermined"
+  set ImageTransparencyMode="Undetermined"
+  set ImageIsFullyOpaque="Undetermined"
+  :: Try to re-encode the image with minimal colors for analysis
+  pngrewrite.exe "%~1" "%~1.%SessionID%.temp.png" 2>nul
+  :: If pngrewrite failed to create an indexed image (contains 256+ unique colors)
+  ::   try an RGB which may have a simple, single transparent mask color.
+  if not exist "%~1.%SessionID%.temp.png" (
+    pngout.exe -q -c2 -s1 -force "%~1" "%~1.%SessionID%.temp.png"
+    if errorlevel 3 set ImageIsFullyOpaque="No - contains transparency"
+  )
+  if exist "%~1.%SessionID%.temp.png" (
+    pngcheck.exe -v "%~1.%SessionID%.temp.png" | findstr.exe /i "transparency alpha" >nul
+    if errorlevel 1 (
+      set ImageIsFullyOpaque="Yes"
+    ) else (
+      set ImageIsFullyOpaque="No - contains transparency"
+    )
+    del "%~1.%SessionID%.temp.png"
+  )
+  >>%log% echo %~z1b - T0S3 Opaque image: %ImageIsFullyOpaque:~1,-1%.
 
-  :: Skip steps that modify color depth for Forced RGBA images
+  :: Skip steps that modify color depth for Forced RGB/A images
   if %ForceRGBA% EQU 1 (
-    echo %~z1b - Preprocessing complete ^(Saved RGBA image, stripped metadata^).
-    echo %~z1b - Compression trial 1 running ^(RGBA Color and filter settings^)...
-    goto T1_Step1_RGBA
+    echo %~z1b - Preprocessing complete ^(saved RGBA image, stripped metadata^).
+    echo %~z1b - Compression trial 1 running ^(RGB/A Color and filter settings^)...
+    goto T1_Step1_RGB
   )
 
   pngrewrite.exe "%~1" "%~1" 2>nul
   pngout.exe -q -k1 -ks -kp -f6 -s1 "%~1"
-  echo %~z1b - Preprocessing complete (optimized metadata, palette and transparency).
+  echo %~z1b - Preprocessing complete (minimized metadata, palette and transparency).
 
 
 
@@ -180,6 +200,9 @@
 
 
 :T1_Step1_Gray+Alpha
+  if %ImageIsFullyOpaque%=="Yes" (
+    goto T1_Step1_Paletted
+  )
   pngout.exe -q -k1 -s4 -c4 "%~1"
   if errorlevel 3 goto T1_Step1_Paletted
   set ImageColorMode="Gray"
@@ -229,6 +252,11 @@
 
 
 :T1_Step1_RGB
+  if %ForceRGBA% EQU 1 (
+    if not %ImageIsFullyOpaque%=="Yes" (
+      goto T1_Step1_RGBA
+    )
+  )
   if %ImageColorMode%=="Gray" goto T1_Step2
   pngout.exe -q -k1 -s4 -c2 "%~1"
   if errorlevel 3 goto T1_Step1_RGBA
@@ -256,14 +284,17 @@
 
 
 :T1_Step1_RGBA
-  if  %ForceRGBA% NEQ 1 (
+  if %ImageIsFullyOpaque%=="Yes" (
+    goto T1_Step2
+  )
+  if %ForceRGBA% NEQ 1 (
     if %ImageColorMode% NEQ "Gray" (
       if %ImageColorMode% NEQ "Paletted" (
         set ImageColorMode="RGB"
       )
     )
     if %ImageTransparencyMode% NEQ "Basic" (
-      set ImageTransparencyMode="Multiple" 
+      set ImageTransparencyMode="Multiple"
     )
   )
   if %LargeFile% EQU 0 (
@@ -592,7 +623,7 @@
   title Optimization complete.
   set TotalFiles=%CurrentFile%
   echo.
-  echo Finished %date% %time% - pngslim %Version%.
+  echo Finished %date% %time% - "%~n0" %Version%.
   echo Processed %TotalFiles% files. Slimmed %TotalBytesSaved% bytes in total.
   if %ErrorsLogged% GTR 0 (
     echo.
