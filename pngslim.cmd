@@ -72,7 +72,7 @@
   if /I "%~x1" NEQ ".png" goto NextFile
   if %~z1 LSS 67 goto NextFile
   if %~z1 GTR 10485760 (
-    echo Large file skipped: "%~1" - exceeds 10MB.
+    echo Large file skipped: "%~1" - exceeds 10 MiB.
     goto NextFile
   )
 
@@ -301,6 +301,10 @@
   )
 
 :T1_End
+  for /f "tokens=2 delims=c " %%i in ('pngout.exe -L "%~1"') do (
+    set ImageColorMode=%%i
+  )
+  >>%log% echo %~z1b - T1S2 Optimum color mode: -c%ImageColorMode%.
   echo %~z1b - Compression trial 1 complete (Color and filter type).
 
 
@@ -348,7 +352,7 @@
   ) else (
     set /a TrialCounter+=1
   )
-  >>%log% echo %~z1b - T2S1 Tested: %TrialBlocks% blocks (try %TrialCounter%/5). Best: %BestBlocks% blocks.
+  >>%log% echo %~z1b - %time:~0,5% T2S1 Tested: %TrialBlocks% blocks (try %TrialCounter%/5). Best: %BestBlocks% blocks.
   if %TrialCounter% GEQ 5 goto T2_Step1_End
   if %TrialBlocks% GEQ %FileMaxHuffmanBlocks% goto T2_Step1_End
   set /a TrialBlocks+=2
@@ -388,7 +392,7 @@
       )
     )
   )
-  >>%log% echo %~z1b - T2S2 Tested %TrialBlocks% block(s) with pngout strategies 0,2,3.
+  >>%log% echo %~z1b - %time:~0,5% T2S2 Tested %TrialBlocks% block(s) with pngout strategies 0,2,3.
   set /a TrialBlocks+=1
   set /a TrialCounter+=1
   if %TrialCounter% GTR 3 goto T2_End
