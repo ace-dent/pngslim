@@ -4,8 +4,9 @@
 # pngslim 
 &emsp;&emsp; – _when every byte counts!_  
 
-Batch optimization of PNG images for MS Windows, using multiple tools to achieve the smallest file size, with scant regard for time. 
-Produced by Andrew C.E. Dent, 2023.  
+Batch optimization of PNG images for MS Windows, using multiple tools to achieve the smallest file size, with scant regard for time.  
+
+Produced by Andrew C.E. Dent, 2024.  
 <br>
 
 
@@ -15,7 +16,7 @@ Produced by Andrew C.E. Dent, 2023.
 2. Drag & drop* your PNG files on `pngslim.cmd` to run.
 3. Have fun slimming away those surplus bytes! :-)
 
-\* Note : Due to limitations of MS Windows, the maximum number of files that you can drag & drop depends on the total text length of the image file paths+names. If the script doesn't run or you see the following error message : "Windows cannot access the specified device, path, or file...", you should reduce the number of selected files (typically <100), and consider moving your files to shorten the path names (e.g. "C:\png\").  
+\* Note : Due to limitations of MS Windows, the maximum number of files that you can drag & drop depends on the total text length of the image file paths+names. If the script doesn't run or you see the following error message : `Windows cannot access the specified device, path, or file...`, you should reduce the number of selected files (typically <100), and consider moving your files to shorten the path names (e.g. "C:\png\").  
 
 
 ### Script parameters
@@ -50,37 +51,28 @@ The additional software included in the 'pngslim' package ('apps') is provided f
 
 ## Included programs
 
-All binaries are compiled for 32 bit Windows (w32).
+All binaries are compiled for 32 bit Windows (w32):
 
-- advdef v2.5 (22-Jan-2023) by Andrea Mazzoleni. <br>
-   http://www.advancemame.it/comp-readme.html
+- [advdef](https://github.com/amadvance/advancecomp) v2.5 (22-Jan-2023) by Andrea Mazzoleni.
 
-- DeflOpt v2.07 (05-Sep-2007) by Ben Jos Walbeehm. <br>
-   http://web.archive.org/web/20131208161446/http://www.walbeehm.com/download/index.html
-   
-- defluff v0.3.2 (07-Apr-2011) by Joachim Henke. <br>
-   https://web.archive.org/web/20230604215335/https://encode.su/threads/1214-defluff-a-deflate-huffman-optimizer
+- [DeflOpt](http://web.archive.org/web/20131208161446/http://www.walbeehm.com/download/index.html) v2.07 (05-Sep-2007) by Ben Jos Walbeehm.
 
-- Huffmix v0.6b2 (06-May-2014) by Frédéric Kayser. <br>
-   https://encode.su/threads/1313-Huffmix-a-PNGOUT-r-catalyst
+- [defluff](https://web.archive.org/web/20230604215335/https://encode.su/threads/1214-defluff-a-deflate-huffman-optimizer) v0.3.2 (07-Apr-2011) by Joachim Henke. 
 
-- OptiPNG v0.7.7 (27-Dec-2017) by Cosmin Truta. <br>
-   http://optipng.sourceforge.net/
+- [Huffmix](https://encode.su/threads/1313-Huffmix-a-PNGOUT-r-catalyst) v0.6b2 (06-May-2014) by Frédéric Kayser.
 
-- pngcheck v3.0.3 (25-Apr-2021) by Alexander Lehmann, Andreas Dilger, Greg Roelofs. <br>
-   http://www.libpng.org/pub/png/apps/pngcheck.html
+- [OptiPNG](http://optipng.sourceforge.net/) v0.7.7 (27-Dec-2017) by Cosmin Truta.
 
-- PNGOUT (13-Feb-2015) by Ken Silverman. <br>
-   http://advsys.net/ken/utils.htm
+- [pngcheck](http://www.libpng.org/pub/png/apps/pngcheck.html) v3.0.3 (25-Apr-2021) by Alexander Lehmann, Andreas Dilger, Greg Roelofs.
 
-- pngrewrite v1.4.0 (8-Jun-2010) by Jason Summers. <br>
-   http://entropymine.com/jason/pngrewrite/
+- [PNGOUT](http://advsys.net/ken/utils.htm) (13-Feb-2015) by Ken Silverman. 
 
+- [pngrewrite](http://entropymine.com/jason/pngrewrite/) v1.4.0 (8-Jun-2010) by Jason Summers. 
 
 
 ## Thanks!
 
-Inspiration came from a script by Jens Rex, 11-Jun-2005. http://hydrogenaudio.org/forums/?showtopic=22036
+Inspiration came from a script by Jens Rex, 2005. http://hydrogenaudio.org/forums/?showtopic=22036
 
 Big thanks to: David Blake, counting_pine, fred01, markcramer, Greg Roelofs, Ken Silverman, Sined, Thundik81, Cosmin Truta, UncleBuck, Zardalu and others. Finally a massive thanks to all authors of the software on which this script depends, and those pioneers developing and optimizing the PNG standard.
 
@@ -88,7 +80,7 @@ Big thanks to: David Blake, counting_pine, fred01, markcramer, Greg Roelofs, Ken
 
 ## History
 
-**v1.2 Development 2023** 
+**v1.2 Development 2024** 
 - Smarter Trial (1). Identify fully opaque images and avoid unnecessary trials with transparency.
 - Improved Trial (2) - optimizing number of Huffman blocks and PNGOUT Deflate strategy. Trial is smarter, faster and may improve compression for large images. Removed `HuffmanTrials` parameter (now unnecessary) and increased maximum number of blocks from 512 to 1024. Trial is skipped early for files well optimized with a single block.
 - Improved Trial (3) - optimizing Huffman tables. Removed `RandomTableTrials` from user parameters. Skip trial entirely for (small) images that only have static Huffman blocks.
