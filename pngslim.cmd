@@ -57,7 +57,7 @@
 
   :: Check regional time separator for later benchmarking. Defaults to `:`
   set Key="HKCU\Control Panel\International"
-  for /f "usebackq skip=2 tokens=3" %%a in (`reg.exe query %Key% /v sTime`) do (
+  for /f "skip=2 tokens=3" %%a in ('reg.exe query %Key% /v sTime') do (
     set "TimeSeparator=%%a"
   )
   if not defined TimeSeparator set TimeSeparator=:
@@ -376,6 +376,8 @@
 
 
 :: Step 1 - Coarse scan for optimal number of Huffman blocks
+:T2_Step1
+  >>%log% echo %~z1b - T2S1 Search for optimum number of Huffman blocks
   set BestSize=%~z1
   set TrialCounter=0
   set TrialBlocks=4
@@ -391,7 +393,7 @@
   ) else (
     set /a TrialCounter+=1
   )
-  >>%log% echo %~z1b - %time:~0,5% T2S1 Tested: %TrialBlocks% blocks (try %TrialCounter%/5). Best: %BestBlocks% blocks.
+  >>%log% echo %~z1b - %time:~0,5% Tested: %TrialBlocks% blocks (try %TrialCounter%/5). Best: %BestBlocks% blocks.
   if %TrialCounter% GEQ 5 goto T2_Step1_End
   if %TrialBlocks% GEQ %FileMaxHuffmanBlocks% goto T2_Step1_End
   set /a TrialBlocks+=2
@@ -431,7 +433,7 @@
       )
     )
   )
-  >>%log% echo %~z1b - %time:~0,5% T2S2 Tested %TrialBlocks% block(s) with pngout strategies 0,2,3.
+  >>%log% echo %~z1b - %time:~0,5% Tested %TrialBlocks% block(s) with pngout strategies 0,2,3.
   set /a TrialBlocks+=1
   set /a TrialCounter+=1
   if %TrialCounter% GTR 3 goto T2_End
@@ -586,7 +588,7 @@
     )
   )
 
-  echo Optimized: "%~n1". Slimmed %FileBytesSaved% bytes, ~%FileReductionPct%%% saving.
+  echo Optimized: "%~n1" - slimmed %FileBytesSaved% bytes, ~%FileReductionPct%%% saving.
   if exist "%~1" (
     del "%~1.%SessionID%.backup"
   ) else (
