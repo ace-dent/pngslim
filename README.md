@@ -6,7 +6,7 @@
 
 Batch optimization of PNG images for MS Windows, using multiple tools to achieve the smallest file size, with scant regard for time.  
 
-Produced by Andrew C.E. Dent, 2024.  
+Produced by Andrew C.E. Dent, 2025.  
 <br>
 
 
@@ -16,7 +16,8 @@ Produced by Andrew C.E. Dent, 2024.
 2. Drag & drop* your PNG files on `pngslim.cmd` to run.
 3. Have fun slimming away those surplus bytes! :-)
 
-\* Note : Due to limitations of MS Windows, the maximum number of files that you can drag & drop depends on the total text length of the image file paths+names. If the script doesn't run or you see the following error message : `Windows cannot access the specified device, path, or file...`, you should reduce the number of selected files (typically <100), and consider moving your files to shorten the path names (e.g. "C:\png\").  
+> [!NOTE]  
+> Due to limitations of MS Windows, the maximum number of files that you can drag & drop depends on the total text length of the image file paths+names. If the script doesn't run or you see the following error message : `Windows cannot access the specified device, path, or file...`, you should reduce the number of selected files (typically <100), and consider moving your files to shorten the path names (e.g. "C:\png\").  
 
 
 ### Script parameters
@@ -31,14 +32,12 @@ By default the script parameters are highly tuned for the majority of use cases 
 
 ### Limitations
 
-**Compatibility**  
-Although this software produces fully compliant PNG images, a minority of image editors and viewers contain bugs which may cause problems displaying these optimized images. Always backup images before optimizing and test compatibility for your given application. Images with extended bit depths, at 16 bits per channel, will not be optimized.
+**Compatibility** – Although this software produces fully compliant PNG images, a minority of image editors and viewers contain bugs which may cause problems displaying these optimized images. Always backup images before optimizing and test compatibility for your given application. Images with extended bit depths, at 16 bits per channel, will not be optimized.
 
-**Security**  
-This script should not be used on secure systems or to process unknown files from third parties. Malicious files and/ or crafted file names, can make the script and utility programs behave in unexpected ways. This is a fundamental limitation of the scripting environment used (Windows Batch).
+**Security** – This script should not be used on secure systems or to process unknown files from third parties. Malicious files and/ or crafted file names, can make the script and utility programs behave in unexpected ways. This is a fundamental limitation of the scripting environment used (Windows Batch).
 
-**Disk wear**  
-The optimization process can write each file *hundreds* of times to disk. For some storage media, including Solid State Drives (SSDs), this may cause excessive wear and shorten the life of the device. It is strongly recommended that you use a RAM drive (fast and robust) or other media that can tolerate heavy write cycles.
+> [!CAUTION]  
+> **Disk wear** – The optimization process can write each file *hundreds* of times to disk. For some storage media, including Solid State Drives (SSDs), this may cause excessive wear and shorten the life of the device. It is strongly recommended that you use a RAM drive (fast and robust) or other media that can tolerate heavy write cycles.
 
 
 ## Legal
@@ -80,7 +79,7 @@ Big thanks to: David Blake, counting_pine, fred01, markcramer, Greg Roelofs, Ken
 
 ## History
 
-**v1.2 Development 2024** 
+**v1.2 Development 2025** 
 - Smarter Trial (1). Identify fully opaque images and avoid unnecessary trials with transparency.
 - Improved Trial (2) - optimizing number of Huffman blocks and PNGOUT Deflate strategy. Trial is smarter, faster and may improve compression for large images. Removed `HuffmanTrials` parameter (now unnecessary) and increased maximum number of blocks from 512 to 1024. Trial is skipped early for files well optimized with a single block.
 - Improved Trial (3) - optimizing Huffman tables. Removed `RandomTableTrials` from user parameters. Skip trial entirely for (small) images that only have static Huffman blocks.
