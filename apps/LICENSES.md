@@ -2,9 +2,9 @@
 
 ## ADVDEF
 https://github.com/amadvance/advancecomp/blob/master/COPYING
-(Accessed 07-Dec-2022) :
+(Accessed 24-May-2025) :
 
-GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007  
+GNU General Public License v3.0
 https://www.gnu.org/licenses/gpl-3.0.html
 
 ---
@@ -27,9 +27,9 @@ Copyright (c) 2010-2011 Joachim Henke
 
 ## OPTIPNG
 http://optipng.sourceforge.net/license.txt
-(Accessed 31-Aug-2021) :
+(Accessed 24-May-2025) :
 
-Copyright (C) 2001-2017 Cosmin Truta and the Contributing Authors.
+Copyright (C) 2001-2025 Cosmin Truta and the Contributing Authors.
 For the purpose of copyright and licensing, the list of Contributing Authors is available in the accompanying AUTHORS file.
 
 This software is provided 'as-is', without any express or implied warranty.  In no event will the author(s) be held liable for any damages arising from the use of this software.

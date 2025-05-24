@@ -53,7 +53,7 @@ The additional software included in the 'pngslim' package ('apps') is provided f
 
 All binaries are compiled for 32 bit Windows (w32):
 
-- [advdef](https://github.com/amadvance/advancecomp) v2.5 (22-Jan-2023) by Andrea Mazzoleni.
+- [advdef](https://github.com/amadvance/advancecomp) v2.6 (10-Oct-2023) by Andrea Mazzoleni. Uses: `7z`, `libdeflate 1.19`, `google/zopfli @6818a08` and `zlib`
 
 - [DeflOpt](http://web.archive.org/web/20131208161446/http://www.walbeehm.com/download/index.html) v2.07 (05-Sep-2007) by Ben Jos Walbeehm.
 
@@ -61,13 +61,13 @@ All binaries are compiled for 32 bit Windows (w32):
 
 - [Huffmix](https://encode.su/threads/1313-Huffmix-a-PNGOUT-r-catalyst) v0.6b2 (06-May-2014) by Frédéric Kayser.
 
-- [OptiPNG](http://optipng.sourceforge.net/) v0.7.7 (27-Dec-2017) by Cosmin Truta.
+- [OptiPNG](http://optipng.sourceforge.net/) v7.9.1 (20-May-2025) by Cosmin Truta. Uses: `libpng 1.6.48` and `zlib 1.3.1-optipng`.
 
 - [pngcheck](http://www.libpng.org/pub/png/apps/pngcheck.html) v3.0.3 (25-Apr-2021) by Alexander Lehmann, Andreas Dilger, Greg Roelofs.
 
-- [PNGOUT](http://advsys.net/ken/utils.htm) (13-Feb-2015) by Ken Silverman. 
+- [PNGOUT](http://advsys.net/ken/utils.htm) (13-Feb-2015) by Ken Silverman. Uses a custom deflate engine.
 
-- [pngrewrite](http://entropymine.com/jason/pngrewrite/) v1.4.0 (8-Jun-2010) by Jason Summers. 
+- [pngrewrite](http://entropymine.com/jason/pngrewrite/) v1.4.0 (8-Jun-2010) by Jason Summers. Uses `libpng 1.4.2` and `zlib 1.2.5`.
 
 
 ## Thanks!
@@ -87,13 +87,13 @@ Big thanks to: David Blake, counting_pine, fred01, markcramer, Greg Roelofs, Ken
 - Extend Trial (4) - final compression sweep includes defluff working with DeflOpt and Huffmix.
 - Provide more info: processing time per image and more accurate file reduction %.
 - File validation: Large files over 10MiB will not be processed.
-- Added PNGOUT parameters for efficiency and correctness: use `-kp` to avoid palette trials and `-f6` to avoid filter trials, where possible.
-- Changed OptiPNG parameters `−nb −nc −np` to the more compact `-nx`, when disabling all lossless image reductions.
+- Tweak parameters for efficiency and correctness. PNGOUT use `-kp` to avoid palette trials and `-f6` to avoid filter trials where possible. OptiPNG use `-nx`, when disabling all lossless image reductions.
 - Improved script readability: indents changed back from tabs to spaces(!);  removed use of `start /belownormal` to run PNGOUT; removed inline comments; made verbose output ('logging') clearer.
 - Reformatted 'README' for markdown and tweaked text. Added a 'Limitations' section.
-- Update 'advdef.exe' to version 2.5 (was 1.15). Adds 'libdeflate' and 'Zopfli' compression engines; many improvements and fixes.
 - Added 'defluff.exe' program v0.3.2 (07-Apr-2011). Provides some low-level optimizations for Deflate data.
 - Added 'huffmix.exe' program v0.6b2 (06-May-2014). It selects the smallest Huffman blocks from two related files and combines them into a new file.
+- Update 'advdef.exe' to version 2.6 (was 1.15). Adds 'libdeflate' and 'Zopfli' compression engines; many improvements and fixes.
+- Update 'optipng.exe' to version 7.9.1 (was 0.7.7). Fixes bug with unreferenced transparency; updated libraries; vulnerability fixes.
 - Updated PNGOUT license.
 
 **v1.1 12-Sep-2021**
