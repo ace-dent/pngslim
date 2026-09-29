@@ -19,13 +19,9 @@ Where possible, keep the diff limited to files and lines directly relevant to th
 
 AI tools may be used to assist with contributions, but contributors remain fully responsible for everything they submit.
 
-Review and understand all AI-generated code, documentation, tests, and comments before including them in a Pull Request. Do not submit generated changes blindly. Check that the contribution is correct, necessary, consistent with the existing codebase, and covered by appropriate tests.
+Review and understand all AI-generated code, documentation, tests, and comments before submitting. Check that the contribution is correct, necessary, consistent with the existing codebase, and covered by appropriate tests.
 
-Keep AI-assisted changes focused and minimal. Avoid large rewrites, speculative refactoring, excessive comments, or unrelated changes introduced by an AI tool.
-
-Do not provide private, confidential, copyrighted, or otherwise restricted project material to external AI services unless you have permission to do so.
-
-Where AI assistance was substantial, please mention this in the Pull Request description and briefly describe how it was used.
+Keep AI-assisted changes focused and minimal. Avoid large rewrites, speculative refactoring, excessive comments, or unrelated changes introduced by an AI tool. Where AI assistance was substantial, please mention this and briefly describe how it was used.
 
 ## Contributor License Agreement (CLA)
 
